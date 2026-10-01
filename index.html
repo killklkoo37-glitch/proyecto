@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#000000">
+<title>Mi Día</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  --blue:#0A84FF; --green:#30D158; --red:#FF453A; --orange:#FF9F0A;
+  --yellow:#FFD60A; --purple:#BF5AF2; --pink:#FF375F; --teal:#64D2FF; --indigo:#5E5CE6;
+  --bg:#000; --card:rgba(28,28,30,0.72); --card-2:rgba(44,44,46,0.72); --card-3:rgba(58,58,60,0.72);
+  --text:#fff; --text-2:rgba(235,235,245,0.6); --text-3:rgba(235,235,245,0.32);
+  --r:18px; --r-lg:26px; --r-xl:32px;
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1); --ease-out:cubic-bezier(0.22,1,0.36,1);
+  --safe-top:env(safe-area-inset-top,0px); --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html { -webkit-text-size-adjust:100%; }
+body {
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Inter','Segoe UI',system-ui,sans-serif;
+  font-feature-settings:"tnum","ss01","cv01";
+  background:#000; color:var(--text);
+  min-height:100vh; min-height:100dvh; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased; letter-spacing:-0.01em; position:relative;
+}
+body::before {
+  content:''; position:fixed; inset:-30%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(10,132,255,0.22), transparent 45%),
+    radial-gradient(circle at 80% 15%, rgba(191,90,242,0.18), transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(100,210,255,0.14), transparent 55%);
+  filter:blur(60px); animation:floatBg 22s ease-in-out infinite alternate; z-index:-1; pointer-events:none;
+}
+@keyframes floatBg { 0%{transform:translate(0,0) scale(1);} 50%{transform:translate(-4%,3%) scale(1.06);} 100%{transform:translate(3%,-3%) scale(1.02);} }
+input,button,select,textarea { font-family:inherit; color:inherit; }
+button { cursor:pointer; border:none; background:none; }
+input:focus,select:focus { outline:none; }
+::selection { background:rgba(10,132,255,0.4); }
+.app { max-width:720px; margin:0 auto; padding:calc(var(--safe-top) + 20px) 18px calc(var(--safe-bottom) + 110px); min-height:100vh; min-height:100dvh; }
+.header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:20px; animation:fadeUp 0.6s var(--ease-out) both; }
+.greeting .hi { font-size:14px; color:var(--text-2); font-weight:500; }
+.greeting .name { font-size:32px; font-weight:800; letter-spacing:-0.9px; margin-top:2px; line-height:1.1;
+  background:linear-gradient(135deg,#fff 30%,#a0b4d8 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.header-actions { display:flex; gap:10px; align-items:center; }
+.icon-circle { width:44px; height:44px; border-radius:50%; background:var(--card);
+  backdrop-filter:blur(30px) saturate(180%); border:1px solid rgba(255,255,255,0.08);
+  display:grid; place-items:center; font-size:18px; transition:transform 0.2s var(--ease-spring); }
+.icon-circle:active { transform:scale(0.9); }
+.view { display:none; animation:viewIn 0.42s var(--ease-out) both; }
+.view.active { display:block; }
+@keyframes viewIn { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:none;} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:none;} }
+.weather { position:relative; border-radius:var(--r-xl); padding:22px;
+  background:linear-gradient(160deg,rgba(30,50,90,0.65) 0%,rgba(20,25,50,0.55) 50%,rgba(40,20,70,0.6) 100%);
+  backdrop-filter:blur(30px) saturate(180%); border:1px solid rgba(255,255,255,0.09);
+  box-shadow:0 20px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+  overflow:hidden; margin-bottom:14px; animation:fadeUp 0.7s var(--ease-out) 0.05s both; }
+.weather::before { content:''; position:absolute; top:-60%; right:-20%; width:320px; height:320px; border-radius:50%;
+  background:radial-gradient(circle,rgba(100,180,255,0.28),transparent 65%); filter:blur(20px); pointer-events:none;
+  animation:pulse 6s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:0.7;transform:scale(1);} 50%{opacity:1;transform:scale(1.08);} }
+.weather-top { display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1; margin-bottom:4px; }
+.weather-loc { font-size:13.5px; font-weight:600; color:rgba(255,255,255,0.85); display:flex; align-items:center; gap:5px; }
+.weather-loc .pin { font-size:11px; opacity:0.8; }
+.weather-loc .src { font-size:10px; opacity:0.55; font-weight:500; margin-left:2px; }
+.weather-clock { font-size:13.5px; font-weight:600; color:rgba(255,255,255,0.75); font-variant-numeric:tabular-nums; }
+.weather-clock .sec { color:rgba(255,255,255,0.45); font-size:11px; margin-left:1px; }
+.weather-main { display:flex; align-items:center; gap:16px; position:relative; z-index:1; margin:6px 0 4px; }
+.weather-icon { font-size:64px; line-height:1; filter:drop-shadow(0 4px 14px rgba(120,180,255,0.4));
+  animation:weatherBob 4s ease-in-out infinite; }
+@keyframes weatherBob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+.weather-temp { font-size:72px; font-weight:200; letter-spacing:-4px; line-height:0.9;
+  background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,0.65) 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; font-variant-numeric:tabular-nums; }
+.weather-temp .deg { font-size:34px; font-weight:300; vertical-align:top; margin-left:2px; opacity:0.7; }
+.weather-desc { font-size:15px; font-weight:600; color:rgba(255,255,255,0.92); }
+.weather-details { display:flex; gap:16px; margin-top:12px; flex-wrap:wrap; position:relative; z-index:1;
+  padding-top:12px; border-top:1px solid rgba(255,255,255,0.08); }
+.wd-item { display:flex; align-items:center; gap:6px; font-size:13px; color:rgba(255,255,255,0.72); font-weight:500; }
+.wd-item .ico { opacity:0.85; font-size:14px; }
+.wd-item .val { color:#fff; font-weight:600; }
+.weather-refresh { position:absolute; top:14px; right:14px; z-index:2; width:32px; height:32px; border-radius:50%;
+  background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); display:grid; place-items:center; font-size:14px;
+  transition:transform 0.3s var(--ease-spring); }
+.weather-refresh:active { transform:scale(0.85) rotate(180deg); }
+.weather-refresh.spinning { animation:spin 0.9s linear infinite; }
+.weather-loading { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,0.6); font-size:14px; padding:20px 0; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.2); border-top-color:#fff; border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.weather-error { padding:16px 0; position:relative; z-index:1; }
+.weather-error .msg { font-size:13.5px; color:rgba(255,255,255,0.75); margin-bottom:12px; line-height:1.5; }
+.btn-mini { padding:8px 14px; border-radius:99px; font-size:12.5px; font-weight:600;
+  background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.15); margin-right:8px; margin-bottom:6px; }
+.reco-hero { border-radius: var(--r-lg); padding: 18px;
+  background: linear-gradient(135deg, rgba(10,132,255,0.20), rgba(191,90,242,0.14));
+  border: 1px solid rgba(10,132,255,0.28); margin-bottom: 14px;
+  display: flex; gap: 14px; align-items: center;
+  animation: fadeUp 0.7s var(--ease-out) 0.1s both;
+  cursor: pointer; transition: transform 0.2s var(--ease-spring);
+  position: relative; overflow: hidden; }
+.reco-hero:active { transform: scale(0.98); }
+.reco-hero::after { content: '→'; position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  color: rgba(255,255,255,0.4); font-size: 18px; font-weight: 700;
+  transition: transform 0.3s var(--ease-spring); }
+.reco-hero:active::after { transform: translateY(-50%) translateX(4px); }
+.reco-hero .ico-big { font-size: 38px; line-height: 1; flex-shrink: 0;
+  filter: drop-shadow(0 4px 12px rgba(10,132,255,0.4)); }
+.reco-hero .info { flex: 1; min-width: 0; padding-right: 22px; }
+.reco-hero .info .tag { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.4px;
+  color: var(--blue); font-weight: 800; margin-bottom: 5px; }
+.reco-hero .info .ttl { font-size: 16px; font-weight: 800; letter-spacing: -0.4px; line-height: 1.25; margin-bottom: 4px; }
+.reco-hero .info .dsc { font-size: 12.5px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.plans-view { display: flex; flex-direction: column; gap: 14px; }
+.plans-head { display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 12px; margin-bottom: 4px; animation: fadeUp 0.5s var(--ease-out) both; }
+.plans-head h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; line-height: 1.15; }
+.plans-head .sub { font-size: 13.5px; color: var(--text-2); margin-top: 5px; line-height: 1.4; }
+.plans-head .weather-pill { display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 12px; border-radius: 99px;
+  background: var(--card); border: 1px solid rgba(255,255,255,0.08);
+  font-size: 12.5px; font-weight: 700; flex-shrink: 0; }
+.reco-list { display: flex; flex-direction: column; gap: 10px; }
+.reco-card { background: var(--card); backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r);
+  padding: 16px; display: flex; gap: 13px; align-items: flex-start;
+  animation: taskIn 0.45s var(--ease-out) both;
+  transition: transform 0.2s var(--ease-out); }
+.reco-card:active { transform: scale(0.99); }
+.reco-card .ic { font-size: 26px; line-height: 1; flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 12px;
+  display: grid; place-items: center; background: rgba(255,255,255,0.05); }
+.reco-card .body { flex: 1; min-width: 0; }
+.reco-card .body .ttl { font-size: 15px; font-weight: 700; letter-spacing: -0.3px;
+  line-height: 1.3; margin-bottom: 4px; }
+.reco-card .body .dsc { font-size: 13px; color: var(--text-2); line-height: 1.45; }
+.reco-card.accent-blue .ic { background: rgba(10,132,255,0.15); }
+.reco-card.accent-green .ic { background: rgba(48,209,88,0.15); }
+.reco-card.accent-orange .ic { background: rgba(255,159,10,0.15); }
+.reco-card.accent-purple .ic { background: rgba(191,90,242,0.15); }
+.reco-card.accent-pink .ic { background: rgba(255,55,95,0.15); }
+.reco-card.accent-teal .ic { background: rgba(100,210,255,0.15); }
+.reco-card.accent-yellow .ic { background: rgba(255,214,10,0.15); }
+.reco-card.accent-red .ic { background: rgba(255,69,58,0.15); }
+.places-section { background: var(--card); backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.07); border-radius: var(--r-lg);
+  padding: 18px; animation: fadeUp 0.5s var(--ease-out) 0.1s both; }
+.places-section .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.places-section .head .ttl { font-size: 17px; font-weight: 800; letter-spacing: -0.4px;
+  display: flex; align-items: center; gap: 7px; }
+.places-section .head .ttl .em { font-size: 20px; }
+.places-section .head .cnt { font-size: 11.5px; font-weight: 700; color: var(--text-2);
+  background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 99px; }
+.places-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px;
+  margin-bottom: 6px; scrollbar-width: none; }
+.places-tabs::-webkit-scrollbar { display: none; }
+.place-tab { padding: 7px 13px; border-radius: 99px; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06); font-size: 12.5px; font-weight: 600; color: var(--text-2);
+  white-space: nowrap; transition: all 0.2s var(--ease-spring);
+  display: inline-flex; align-items: center; gap: 5px; }
+.place-tab:active { transform: scale(0.94); }
+.place-tab.on { background: rgba(10,132,255,0.18); color: var(--blue); border-color: rgba(10,132,255,0.35); }
+.places-list { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.place { display: flex; gap: 12px; align-items: flex-start; padding: 12px;
+  background: rgba(255,255,255,0.035); border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.2s var(--ease-out); animation: taskIn 0.4s var(--ease-out) both; }
+.place:active { background: rgba(255,255,255,0.07); }
+.place .p-ic { width: 38px; height: 38px; border-radius: 11px;
+  background: rgba(10,132,255,0.14); display: grid; place-items: center;
+  font-size: 17px; flex-shrink: 0; }
+.place .p-body { flex: 1; min-width: 0; }
+.place .p-name { font-size: 14px; font-weight: 700; letter-spacing: -0.2px;
+  line-height: 1.3; margin-bottom: 3px;
+  overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.place .p-meta { font-size: 11.5px; color: var(--text-2);
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.place .p-meta .dist { color: var(--blue); font-weight: 700; }
+.place .p-map { width: 34px; height: 34px; border-radius: 10px;
+  background: rgba(255,255,255,0.07); display: grid; place-items: center; font-size: 15px;
+  flex-shrink: 0; transition: all 0.2s var(--ease-spring);
+  text-decoration: none; color: var(--text-2); }
+.place .p-map:active { transform: scale(0.85); background: var(--blue); color: #fff; }
+.places-loading { display: flex; align-items: center; gap: 10px;
+  color: var(--text-2); font-size: 13.5px; padding: 20px 0; justify-content: center; }
+.best-time { background: linear-gradient(135deg, rgba(255,159,10,0.16), rgba(255,214,10,0.10));
+  border: 1px solid rgba(255,159,10,0.25); border-radius: var(--r-lg);
+  padding: 16px 18px; display: flex; gap: 14px; align-items: center;
+  animation: fadeUp 0.5s var(--ease-out) 0.15s both; }
+.best-time .bt-ic { font-size: 34px; flex-shrink: 0; filter: drop-shadow(0 4px 10px rgba(255,159,10,0.5)); }
+.best-time .bt-body { flex: 1; }
+.best-time .bt-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: 1.3px;
+  font-weight: 800; color: var(--orange); margin-bottom: 4px; }
+.best-time .bt-val { font-size: 15.5px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.3; }
+.best-time .bt-sub { font-size: 12.5px; color: var(--text-2); margin-top: 3px; line-height: 1.4; }
+.device-info { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; animation:fadeUp 0.7s var(--ease-out) 0.08s both; }
+.device-chip { display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:99px;
+  background:var(--card); backdrop-filter:blur(20px); border:1px solid rgba(255,255,255,0.07);
+  font-size:11.5px; font-weight:600; color:var(--text-2); }
+.device-chip .ic { font-size:13px; opacity:0.9; }
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:22px; animation:fadeUp 0.7s var(--ease-out) 0.1s both; }
+.mini-stat { background:var(--card); backdrop-filter:blur(30px) saturate(180%); border:1px solid rgba(255,255,255,0.07);
+  border-radius:var(--r); padding:14px 12px; text-align:center; transition:transform 0.2s var(--ease-spring); }
+.mini-stat:active { transform:scale(0.96); }
+.mini-stat .ic { font-size:18px; margin-bottom:4px; display:block; opacity:0.95; }
+.mini-stat .v { font-size:22px; font-weight:700; letter-spacing:-0.6px; font-variant-numeric:tabular-nums; line-height:1.1; }
+.mini-stat .l { font-size:10.5px; color:var(--text-2); font-weight:500; margin-top:3px; }
+.section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding:0 2px; }
+.section-title { font-size:20px; font-weight:700; letter-spacing:-0.5px; }
+.section-badge { font-size:12px; font-weight:600; color:var(--text-2); background:var(--card); padding:5px 11px; border-radius:99px; border:1px solid rgba(255,255,255,0.07); }
+.progress-card { background:var(--card); backdrop-filter:blur(30px) saturate(180%); border:1px solid rgba(255,255,255,0.07);
+  border-radius:var(--r-lg); padding:18px; margin-bottom:20px; display:flex; align-items:center; gap:16px;
+  animation:fadeUp 0.7s var(--ease-out) 0.15s both; }
+.ring-wrap { position:relative; width:76px; height:76px; flex-shrink:0; }
+.ring-wrap svg { transform:rotate(-90deg); }
+.ring-wrap .ring-bg { stroke:rgba(255,255,255,0.08); }
+.ring-wrap .ring-fg { stroke:url(#gradRing); stroke-linecap:round; transition:stroke-dashoffset 0.9s var(--ease-out); }
+.ring-pct { position:absolute; inset:0; display:grid; place-items:center; font-size:18px; font-weight:700; letter-spacing:-0.5px; font-variant-numeric:tabular-nums; }
+.progress-info { flex:1; min-width:0; }
+.progress-info .title { font-size:15px; font-weight:700; letter-spacing:-0.2px; margin-bottom:3px; }
+.progress-info .sub { font-size:13px; color:var(--text-2); line-height:1.4; }
+.tabs { display:flex; gap:4px; background:var(--card); backdrop-filter:blur(30px) saturate(180%); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:4px; margin-bottom:14px; animation:fadeUp 0.7s var(--ease-out) 0.2s both; }
+.tab { flex:1; padding:9px 6px; border-radius:10px; font-size:13px; font-weight:600; color:var(--text-2);
+  transition:all 0.22s var(--ease-out); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tab:active { transform:scale(0.95); }
+.tab.active { background:rgba(255,255,255,0.12); color:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); }
+.tab .cnt { font-size:11px; opacity:0.7; margin-left:3px; font-weight:500; }
+.task-list { display:flex; flex-direction:column; gap:9px; }
+.task { background:var(--card); backdrop-filter:blur(30px) saturate(180%); border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--r); padding:14px 14px 14px 16px; display:flex; gap:12px; align-items:flex-start;
+  position:relative; overflow:hidden; animation:taskIn 0.42s var(--ease-out) both; transition:transform 0.2s var(--ease-out); }
+@keyframes taskIn { from{opacity:0;transform:translateY(10px) scale(0.98);} to{opacity:1;transform:none;} }
+.task:active { transform:scale(0.99); }
+.task::before { content:''; position:absolute; left:0; top:12px; bottom:12px; width:3px; border-radius:0 3px 3px 0; }
+.task[data-p="alta"]::before { background:var(--red); }
+.task[data-p="media"]::before { background:var(--orange); }
+.task[data-p="baja"]::before { background:var(--green); }
+.task.done { opacity:0.42; }
+.task.done .task-text { text-decoration:line-through; color:var(--text-2); }
+.check { width:24px; height:24px; min-width:24px; border-radius:50%; border:2px solid rgba(255,255,255,0.22);
+  display:grid; place-items:center; margin-top:1px; transition:all 0.22s var(--ease-spring); }
+.check:active { transform:scale(0.85); }
+.check.on { background:var(--green); border-color:var(--green); box-shadow:0 0 0 4px rgba(48,209,88,0.15); }
+.check.on::after { content:''; width:11px; height:6px; border-left:2.5px solid #000; border-bottom:2.5px solid #000;
+  transform:rotate(-45deg) translate(0.5px,-1px); border-radius:1px; }
+.task-body { flex:1; min-width:0; }
+.task-text { font-size:15.5px; line-height:1.4; letter-spacing:-0.2px; word-break:break-word; padding:1px 3px; margin:-1px -3px; border-radius:6px; outline:none; }
+.task-text:focus { background:rgba(255,255,255,0.06); }
+.task-meta { display:flex; gap:6px; flex-wrap:wrap; margin-top:7px; }
+.chip { font-size:11px; font-weight:600; padding:3px 8px; border-radius:99px; background:rgba(255,255,255,0.07); color:var(--text-2);
+  display:inline-flex; align-items:center; gap:3px; }
+.chip.p-alta { background:rgba(255,69,58,0.16); color:#FF7B72; }
+.chip.p-media { background:rgba(255,159,10,0.16); color:#FFB340; }
+.chip.p-baja { background:rgba(48,209,88,0.16); color:#5EE07F; }
+.chip.time { background:rgba(10,132,255,0.16); color:#4DA3FF; }
+.chip.date { background:rgba(191,90,242,0.16); color:#CE7BF7; }
+.task-actions { display:flex; gap:2px; align-items:center; flex-shrink:0; }
+.task-btn { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; font-size:15px; color:var(--text-2);
+  transition:all 0.2s var(--ease-spring); }
+.task-btn:active { transform:scale(0.85); background:rgba(255,255,255,0.1); }
+.task-btn.play:active { color:var(--blue); }
+.task-btn.del:active { color:var(--red); }
+.empty { text-align:center; padding:50px 22px; background:var(--card); backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.06); border-radius:var(--r-lg); animation:fadeUp 0.5s var(--ease-out) both; }
+.empty .em { font-size:46px; display:block; margin-bottom:12px; opacity:0.85; }
+.empty h3 { font-size:17px; font-weight:700; letter-spacing:-0.3px; margin-bottom:6px; }
+.empty p { font-size:13.5px; color:var(--text-2); line-height:1.5; max-width:260px; margin:0 auto; }
+.fab { position:fixed; bottom:calc(var(--safe-bottom) + 88px); right:22px; width:58px; height:58px; border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--indigo));
+  box-shadow:0 12px 34px rgba(10,132,255,0.5), 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3);
+  display:grid; place-items:center; color:#fff; font-size:28px; font-weight:300; z-index:40;
+  transition:transform 0.28s var(--ease-spring); animation:fabIn 0.5s var(--ease-spring) 0.4s both; }
+@keyframes fabIn { from{opacity:0;transform:scale(0);} to{opacity:1;transform:scale(1);} }
+.fab:active { transform:scale(0.88) rotate(90deg); }
+.nav { position:fixed; bottom:0; padding:10px 14px calc(var(--safe-bottom) + 10px);
+  background:rgba(20,20,22,0.72); backdrop-filter:blur(40px) saturate(180%);
+  border-top:1px solid rgba(255,255,255,0.06); display:flex; gap:4px; z-index:30;
+  max-width:720px; margin:0 auto; left:50%; transform:translateX(-50%); width:100%; }
+.nav-item { flex:1; padding:7px 4px 6px; border-radius:14px; display:flex; flex-direction:column; align-items:center; gap:3px;
+  color:var(--text-3); transition:all 0.25s var(--ease-out); font-size:10.5px; font-weight:600; }
+.nav-item .ni { font-size:21px; line-height:1; transition:transform 0.3s var(--ease-spring); }
+.nav-item:active .ni { transform:scale(0.85); }
+.nav-item.active { color:var(--blue); }
+.nav-item.active .ni { transform:scale(1.08); }
+.focus-view { display:flex; flex-direction:column; align-items:center; padding-top:6px; }
+.timer-card { width:100%; background:var(--card); backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.07); border-radius:var(--r-xl); padding:30px 20px 26px; text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,0.4); animation:fadeUp 0.6s var(--ease-out) both; }
+.timer-ring-wrap { position:relative; width:240px; height:240px; margin:0 auto 20px; }
+.timer-ring-wrap svg { transform:rotate(-90deg); display:block; }
+.tr-bg { stroke:rgba(255,255,255,0.07); }
+.tr-fg { stroke:url(#gradTimer); stroke-linecap:round; transition:stroke-dashoffset 0.5s linear; filter:drop-shadow(0 0 12px rgba(10,132,255,0.5)); }
+.timer-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.timer-time { font-size:52px; font-weight:200; letter-spacing:-3px; font-variant-numeric:tabular-nums; line-height:1;
+  background:linear-gradient(180deg,#fff 40%,rgba(255,255,255,0.6) 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.timer-status { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1.4px; color:var(--text-2); margin-top:8px; }
+.timer-status.on { color:var(--blue); animation:pulseText 1.6s ease-in-out infinite; }
+@keyframes pulseText { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+.timer-current { font-size:13.5px; font-weight:600; color:var(--blue); background:rgba(10,132,255,0.12);
+  padding:8px 14px; border-radius:99px; display:inline-block; max-width:90%; overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap; margin-top:12px; }
+.timer-controls { display:flex; gap:10px; justify-content:center; margin-top:22px; }
+.btn { border-radius:14px; padding:13px 20px; font-size:14.5px; font-weight:600;
+  background:rgba(255,255,255,0.09); color:#fff; transition:transform 0.2s var(--ease-spring), background 0.15s;
+  display:inline-flex; align-items:center; justify-content:center; gap:6px; border:1px solid rgba(255,255,255,0.06); }
+.btn:active { transform:scale(0.94); opacity:0.85; }
+.btn.primary { background:linear-gradient(135deg,var(--blue),var(--indigo)); border-color:transparent;
+  box-shadow:0 8px 22px rgba(10,132,255,0.35), inset 0 1px 0 rgba(255,255,255,0.25); padding:13px 26px; }
+.btn.success { background:linear-gradient(135deg,#2fbf85,var(--green)); color:#04241a; border-color:transparent;
+  box-shadow:0 8px 22px rgba(48,209,88,0.3); font-weight:700; }
+.btn.ghost { background:rgba(255,255,255,0.06); }
+.presets { display:flex; gap:7px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+.preset { padding:8px 14px; border-radius:99px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.06);
+  font-size:12.5px; font-weight:600; color:var(--text-2); transition:all 0.2s var(--ease-spring); }
+.preset:active { transform:scale(0.9); }
+.preset.on { background:rgba(10,132,255,0.18); color:var(--blue); border-color:rgba(10,132,255,0.35); }
+.big-stats { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-bottom:14px; }
+.big-stat { background:var(--card); backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.07); border-radius:var(--r-lg); padding:20px 16px;
+  position:relative; overflow:hidden; animation:fadeUp 0.5s var(--ease-out) both; }
+.big-stat .glow { position:absolute; top:-40px; right:-40px; width:110px; height:110px; border-radius:50%; filter:blur(30px); opacity:0.5; }
+.big-stat .v { font-size:38px; font-weight:800; letter-spacing:-1.8px; line-height:1; font-variant-numeric:tabular-nums; }
+.big-stat .l { font-size:12px; color:var(--text-2); font-weight:600; margin-top:8px; }
+.streak-card { background:linear-gradient(135deg,rgba(255,159,10,0.18),rgba(255,69,58,0.14));
+  border:1px solid rgba(255,159,10,0.25); border-radius:var(--r-lg); padding:20px;
+  display:flex; align-items:center; gap:16px; margin-bottom:14px; animation:fadeUp 0.5s var(--ease-out) 0.1s both; }
+.streak-card .flame { font-size:46px; filter:drop-shadow(0 4px 12px rgba(255,159,10,0.6)); animation:flameBob 2s ease-in-out infinite; }
+@keyframes flameBob { 0%,100%{transform:scale(1) rotate(-3deg);} 50%{transform:scale(1.08) rotate(3deg);} }
+.streak-card .num { font-size:32px; font-weight:800; letter-spacing:-1px; line-height:1; }
+.streak-card .txt { font-size:14px; font-weight:700; margin-bottom:4px; }
+.streak-card .sub { font-size:12.5px; color:rgba(255,255,255,0.65); }
+.quote-card { background:var(--card); backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.07); border-radius:var(--r-lg); padding:22px; animation:fadeUp 0.5s var(--ease-out) 0.15s both; }
+.quote-card .q { font-size:15.5px; line-height:1.55; letter-spacing:-0.2px; color:rgba(255,255,255,0.92); font-weight:500; }
+.quote-card .a { font-size:12.5px; color:var(--text-2); margin-top:12px; font-weight:600; }
+.sheet-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.55); backdrop-filter:blur(8px);
+  z-index:100; opacity:0; pointer-events:none; transition:opacity 0.3s var(--ease-out); }
+.sheet-overlay.show { opacity:1; pointer-events:auto; }
+.sheet { position:fixed; bottom:0; left:0; right:0; max-width:720px; margin:0 auto;
+  background:rgba(28,28,30,0.94); backdrop-filter:blur(40px) saturate(180%);
+  border-radius:26px 26px 0 0; padding:12px 20px calc(var(--safe-bottom) + 22px);
+  z-index:101; transform:translateY(100%); transition:transform 0.42s var(--ease-spring);
+  border-top:1px solid rgba(255,255,255,0.1); box-shadow:0 -20px 60px rgba(0,0,0,0.5); }
+.sheet.show { transform:translateY(0); }
+.sheet-handle { width:36px; height:5px; background:rgba(255,255,255,0.22); border-radius:99px; margin:0 auto 18px; }
+.sheet h3 { font-size:22px; font-weight:800; letter-spacing:-0.6px; margin-bottom:16px; }
+.sheet-input { width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px; padding:15px 16px; font-size:16px; color:#fff; margin-bottom:12px; transition:all 0.2s; }
+.sheet-input::placeholder { color:var(--text-3); }
+.sheet-input:focus { border-color:var(--blue); background:rgba(10,132,255,0.08); box-shadow:0 0 0 3px rgba(10,132,255,0.15); }
+.sheet-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.pill-select { position:relative; }
+.pill-select select { width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px; padding:14px 16px; font-size:14.5px; font-weight:600; appearance:none; -webkit-appearance:none; color:#fff; cursor:pointer; }
+.pill-select::after { content:'▾'; position:absolute; right:16px; top:50%; transform:translateY(-50%); color:var(--text-2); pointer-events:none; font-size:12px; }
+.pill-select select option { background:#1c1c1e; color:#fff; }
+.sheet-actions { display:flex; gap:10px; margin-top:6px; }
+.sheet-actions .btn { flex:1; }
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(14px);
+  z-index:200; opacity:0; pointer-events:none; transition:opacity 0.3s; display:grid; place-items:center; padding:20px; }
+.modal-overlay.show { opacity:1; pointer-events:auto; }
+.modal { background:rgba(28,28,30,0.92); backdrop-filter:blur(40px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.1); border-radius:28px; padding:30px 24px 24px;
+  max-width:420px; width:100%; text-align:center; transform:scale(0.92);
+  transition:transform 0.4s var(--ease-spring); box-shadow:0 30px 80px rgba(0,0,0,0.6); }
+.modal-overlay.show .modal { transform:scale(1); }
+.modal .em { font-size:56px; display:block; margin-bottom:14px; }
+.modal h2 { font-size:22px; font-weight:800; letter-spacing:-0.6px; margin-bottom:8px; }
+.modal .sub { font-size:14px; color:var(--text-2); margin-bottom:20px; line-height:1.5; }
+.modal .focus-task { background:rgba(10,132,255,0.12); border:1px solid rgba(10,132,255,0.25); border-radius:16px;
+  padding:18px; font-size:16.5px; font-weight:700; letter-spacing:-0.3px; margin-bottom:20px; line-height:1.4; }
+.modal-actions { display:flex; flex-direction:column; gap:8px; }
+.modal-actions .btn { width:100%; }
+.toasts { position:fixed; top:calc(var(--safe-top) + 14px); left:50%; transform:translateX(-50%);
+  z-index:300; display:flex; flex-direction:column; gap:8px; align-items:center; pointer-events:none;
+  width:calc(100% - 32px); max-width:400px; }
+.toast { background:rgba(40,40,44,0.94); backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:12px 18px; font-size:14px; font-weight:600;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5); display:flex; align-items:center; gap:8px;
+  animation:toastIn 0.4s var(--ease-spring) both; max-width:100%; }
+.toast.out { animation:toastOut 0.3s var(--ease-out) forwards; }
+@keyframes toastIn { from{opacity:0;transform:translateY(-24px) scale(0.9);} to{opacity:1;transform:none;} }
+@keyframes toastOut { to{opacity:0;transform:translateY(-16px) scale(0.95);} }
+@media (max-width:420px) {
+  .app { padding-left:14px; padding-right:14px; }
+  .weather-temp { font-size:62px; letter-spacing:-3px; }
+  .weather-icon { font-size:54px; }
+  .greeting .name { font-size:28px; }
+  .timer-time { font-size:46px; }
+  .timer-ring-wrap { width:210px; height:210px; }
+  .big-stat .v { font-size:32px; }
+  .plans-head h2 { font-size:24px; }
+}
+@media (min-width:721px) { .fab { right:calc(50% - 360px + 22px); } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="gradRing" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0A84FF"/><stop offset="100%" stop-color="#BF5AF2"/></linearGradient>
+    <linearGradient id="gradTimer" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0A84FF"/><stop offset="50%" stop-color="#64D2FF"/><stop offset="100%" stop-color="#BF5AF2"/></linearGradient>
+  </defs>
+</svg>
+
+<div class="app">
+  <header class="header">
+    <div class="greeting">
+      <div class="hi" id="greetHi">Hola</div>
+      <div class="name" id="greetName">Buenos días</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-circle" id="btnCaos" title="Modo caos">🆘</button>
+      <button class="icon-circle" id="btnSettings" title="Ajustes">⚙️</button>
+    </div>
+  </header>
+
+  <main class="view active" data-view="home">
+    <div class="weather" id="weatherCard">
+      <button class="weather-refresh" id="weatherRefresh" title="Actualizar">🔄</button>
+      <div class="weather-top">
+        <div class="weather-loc" id="weatherLoc">
+          <span class="pin">📍</span><span id="locName">Detectando ubicación…</span>
+        </div>
+        <div class="weather-clock" id="clock">
+          <span id="clockTime">00:00</span><span class="sec" id="clockSec">:00</span>
+        </div>
+      </div>
+      <div id="weatherBody">
+        <div class="weather-loading"><div class="spinner"></div><span>Analizando tu ubicación…</span></div>
+      </div>
+    </div>
+
+    <div class="reco-hero" id="recoHero">
+      <div class="ico-big" id="recoHeroIcon">💡</div>
+      <div class="info">
+        <div class="tag">Recomendación de ahora</div>
+        <div class="ttl" id="recoHeroTitle">Analizando el clima…</div>
+        <div class="dsc" id="recoHeroDesc">Espera un momento…</div>
+      </div>
+    </div>
+
+    <div class="device-info" id="deviceInfo"></div>
+
+    <div class="stats-row">
+      <div class="mini-stat"><span class="ic">✅</span><div class="v" id="qsHoy">0</div><div class="l">Hechas hoy</div></div>
+      <div class="mini-stat"><span class="ic">⏳</span><div class="v" id="qsPend">0</div><div class="l">Pendientes</div></div>
+      <div class="mini-stat"><span class="ic">🔥</span><div class="v" id="qsRacha">0</div><div class="l">Días racha</div></div>
+    </div>
+
+    <div class="progress-card">
+      <div class="ring-wrap">
+        <svg width="76" height="76" viewBox="0 0 76 76">
+          <circle class="ring-bg" cx="38" cy="38" r="32" fill="none" stroke-width="7"/>
+          <circle class="ring-fg" id="ringFg" cx="38" cy="38" r="32" fill="none" stroke-width="7" stroke-dasharray="201" stroke-dashoffset="201"/>
+        </svg>
+        <div class="ring-pct" id="ringPct">0%</div>
+      </div>
+      <div class="progress-info">
+        <div class="title" id="progTitle">Día en progreso</div>
+        <div class="sub" id="progSub">Añade tu primera tarea</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="section-title">Tareas</div>
+      <div class="section-badge" id="taskBadge">0 hoy</div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-filter="hoy">Hoy <span class="cnt" id="c-hoy">0</span></button>
+      <button class="tab" data-filter="pend">Pendientes <span class="cnt" id="c-pend">0</span></button>
+      <button class="tab" data-filter="done">Hechas <span class="cnt" id="c-done">0</span></button>
+      <button class="tab" data-filter="all">Todas</button>
+    </div>
+
+    <div class="task-list" id="taskList"></div>
+  </main>
+
+  <main class="view" data-view="plan">
+    <div class="plans-view">
+      <div class="plans-head">
+        <div>
+          <h2>Planes para hoy</h2>
+          <div class="sub" id="plansSub">Analizando clima y tu zona…</div>
+        </div>
+        <div class="weather-pill" id="plansPill">🌡️ —</div>
+      </div>
+
+      <div class="best-time" id="bestTimeCard" style="display:none">
+        <div class="bt-ic">☀️</div>
+        <div class="bt-body">
+          <div class="bt-lbl">Mejor momento</div>
+          <div class="bt-val" id="btVal">—</div>
+          <div class="bt-sub" id="btSub">—</div>
+        </div>
+      </div>
+
+      <div class="reco-list" id="recoList"></div>
+
+      <div class="places-section">
+        <div class="head">
+          <div class="ttl"><span class="em">📍</span>Cerca de ti</div>
+          <div class="cnt" id="placesCount">—</div>
+        </div>
+        <div class="places-tabs" id="placesTabs">
+          <button class="place-tab on" data-cat="reco">✨ Para hoy</button>
+          <button class="place-tab" data-cat="cafe">☕ Cafés</button>
+          <button class="place-tab" data-cat="restaurant">🍽️ Comer</button>
+          <button class="place-tab" data-cat="park">🌳 Parques</button>
+          <button class="place-tab" data-cat="museum">🏛️ Museos</button>
+          <button class="place-tab" data-cat="cinema">🎬 Cine</button>
+          <button class="place-tab" data-cat="bar">🍺 Bares</button>
+          <button class="place-tab" data-cat="gym">💪 Gym</button>
+          <button class="place-tab" data-cat="supermarket">🛒 Súper</button>
+          <button class="place-tab" data-cat="pharmacy">💊 Farmacia</button>
+        </div>
+        <div class="places-list" id="placesList">
+          <div class="places-loading"><div class="spinner"></div><span>Cargando lugares…</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <main class="view" data-view="focus">
+    <div class="focus-view">
+      <div class="timer-card">
+        <div class="timer-ring-wrap">
+          <svg width="240" height="240" viewBox="0 0 240 240">
+            <circle class="tr-bg" cx="120" cy="120" r="106" fill="none" stroke-width="10"/>
+            <circle class="tr-fg" id="trFg" cx="120" cy="120" r="106" fill="none" stroke-width="10" stroke-dasharray="665.9" stroke-dashoffset="0"/>
+          </svg>
+          <div class="timer-center">
+            <div class="timer-time" id="timerTime">25:00</div>
+            <div class="timer-status" id="timerStatus">Listo</div>
+          </div>
+        </div>
+        <div id="timerTaskWrap"></div>
+        <div class="timer-controls">
+          <button class="btn primary" id="btnPlay">▶ Empezar</button>
+          <button class="btn" id="btnReset">↻</button>
+        </div>
+        <div class="presets">
+          <button class="preset" data-min="2">2 min</button>
+          <button class="preset" data-min="5">5 min</button>
+          <button class="preset" data-min="15">15 min</button>
+          <button class="preset on" data-min="25">25 min</button>
+          <button class="preset" data-min="50">50 min</button>
+        </div>
+      </div>
+      <div class="quote-card" style="margin-top:14px;width:100%">
+        <div class="q" id="focusQuote">"Solo hazlo. Los sentimientos vendrán después."</div>
+        <div class="a">— Anónimo</div>
+      </div>
+    </div>
+  </main>
+
+  <main class="view" data-view="stats">
+    <div class="big-stats">
+      <div class="big-stat"><div class="glow" style="background:#0A84FF"></div><div class="v" id="stTotal" style="color:#4DA3FF">0</div><div class="l">Tareas completadas</div></div>
+      <div class="big-stat"><div class="glow" style="background:#BF5AF2"></div><div class="v" id="stFocus" style="color:#CE7BF7">0m</div><div class="l">Tiempo enfocado</div></div>
+      <div class="big-stat"><div class="glow" style="background:#30D158"></div><div class="v" id="stWeek" style="color:#5EE07F">0</div><div class="l">Esta semana</div></div>
+      <div class="big-stat"><div class="glow" style="background:#FF9F0A"></div><div class="v" id="stMeta" style="color:#FFB340">0%</div><div class="l">Meta diaria</div></div>
+    </div>
+    <div class="streak-card">
+      <div class="flame" id="streakFlame">🔥</div>
+      <div>
+        <div class="txt"><span id="streakNum">0</span> días de racha</div>
+        <div class="sub" id="streakMsg">Completa 1 tarea para empezar</div>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="q" id="statsQuote">—</div>
+      <div class="a" id="statsQuoteAuthor"></div>
+      <button class="btn ghost" style="width:100%;margin-top:16px;justify-content:center" id="btnNewQuote">🔄 Otra frase</button>
+    </div>
+    <div style="height:12px"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" style="flex:1;justify-content:center" id="btnExport">⬇️ Exportar</button>
+      <button class="btn" style="flex:1;justify-content:center" id="btnImport">⬆️ Importar</button>
+      <button class="btn" style="justify-content:center;color:var(--red)" id="btnReset">🗑️</button>
+    </div>
+    <input type="file" id="fileInput" accept=".json" hidden>
+  </main>
+</div>
+
+<button class="fab" id="fab" aria-label="Nueva tarea">+</button>
+
+<nav class="nav">
+  <button class="nav-item active" data-view="home"><span class="ni">🏠</span><span>Inicio</span></button>
+  <button class="nav-item" data-view="plan"><span class="ni">💡</span><span>Planes</span></button>
+  <button class="nav-item" data-view="focus"><span class="ni">🎯</span><span>Enfoque</span></button>
+  <button class="nav-item" data-view="stats"><span class="ni">📊</span><span>Stats</span></button>
+</nav>
+
+<div class="sheet-overlay" id="sheetOverlay"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <h3>Nueva tarea</h3>
+  <input type="text" class="sheet-input" id="inputTarea" placeholder="¿Qué tienes que hacer?" autocomplete="off">
+  <div class="sheet-row">
+    <div class="pill-select"><select id="selPrioridad"><option value="alta">🔴 Alta</option><option value="media" selected>🟡 Media</option><option value="baja">🟢 Baja</option></select></div>
+    <div class="pill-select"><select id="selCategoria">
+      <option value="General">📁 General</option><option value="Trabajo">💼 Trabajo</option><option value="Estudio">📚 Estudio</option>
+      <option value="Casa">🏠 Casa</option><option value="Salud">💪 Salud</option><option value="Personal">🌱 Personal</option><option value="Dinero">💰 Dinero</option>
+    </select></div>
+  </div>
+  <div class="sheet-row">
+    <input type="number" class="sheet-input" id="inputEst" placeholder="Minutos (opcional)" min="1" max="600" style="margin:0">
+    <input type="date" class="sheet-input" id="inputFecha" style="margin:0">
+  </div>
+  <div class="sheet-actions">
+    <button class="btn" id="sheetCancel">Cancelar</button>
+    <button class="btn success" id="sheetAdd">Añadir tarea</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+/* =====================================================
+   CONSTANTS
+   ===================================================== */
+const LS_KEY = 'ios_organizer_v4';
+const WMO = {
+  0:['Despejado','☀️'],1:['Mayormente despejado','🌤️'],2:['Parcialmente nublado','⛅'],3:['Nublado','☁️'],
+  45:['Niebla','🌫️'],48:['Niebla con escarcha','🌫️'],
+  51:['Llovizna ligera','🌦️'],53:['Llovizna','🌦️'],55:['Llovizna densa','🌧️'],
+  61:['Lluvia ligera','🌧️'],63:['Lluvia moderada','🌧️'],65:['Lluvia fuerte','🌧️'],
+  71:['Nieve ligera','🌨️'],73:['Nieve moderada','🌨️'],75:['Nieve fuerte','❄️'],
+  80:['Chubascos','🌦️'],81:['Chubascos','🌧️'],82:['Chubascos fuertes','⛈️'],
+  95:['Tormenta','⛈️'],96:['Tormenta con granizo','⛈️'],99:['Tormenta fuerte','⛈️']
+};
+const FRASES = [
+  ['No tienes que hacerlo perfecto, solo tienes que empezar.','Anónimo'],
+  ['La acción no siempre trae felicidad, pero sin acción no hay felicidad.','Benjamin Disraeli'],
+  ['Solo hazlo. Los sentimientos vendrán después.','Anónimo'],
+  ['Un viaje de mil millas comienza con un solo paso.','Lao Tsé'],
+  ['La disciplina es elegir entre lo que quieres ahora y lo que quieres más.','Abraham Lincoln'],
+  ['El mejor momento para plantar un árbol fue hace 20 años. El segundo mejor es ahora.','Proverbio chino'],
+  ['Empieza haciendo lo necesario, luego lo posible, y de repente estarás haciendo lo imposible.','San Francisco de Asís'],
+  ['La motivación te hace empezar, el hábito te hace continuar.','Jim Ryun'],
+  ['Hecho es mejor que perfecto.','Anónimo'],
+  ['Solo 2 minutos. Eso es todo lo que necesitas para romper la inercia.','Regla de los 2 minutos'],
+  ['Tu futuro se decide por lo que haces hoy, no mañana.','Anónimo'],
+  ['Cada tarea completada es un voto por la persona en la que te quieres convertir.','James Clear'],
+  ['No estás cansado, estás sin empezar.','Anónimo'],
+  ['La mejor forma de predecir tu futuro es crearlo.','Peter Drucker'],
+  ['El éxito es la suma de pequeños esfuerzos repetidos día tras día.','Robert Collier']
+];
+const PLACE_CATS = {
+  cafe:        { icon:'☕', label:'Cafés',         query:'node["amenity"="cafe"]' },
+  restaurant:  { icon:'🍽️', label:'Restaurantes',  query:'node["amenity"="restaurant"]' },
+  park:        { icon:'🌳', label:'Parques',       query:'node["leisure"="park"]' },
+  museum:      { icon:'🏛️', label:'Museos',        query:'node["tourism"="museum"]' },
+  cinema:      { icon:'🎬', label:'Cines',         query:'node["amenity"="cinema"]' },
+  bar:         { icon:'🍺', label:'Bares',         query:'node["amenity"="bar"]' },
+  gym:         { icon:'💪', label:'Gimnasios',     query:'node["leisure"="fitness_centre"]' },
+  supermarket: { icon:'🛒', label:'Súpers',        query:'node["shop"="supermarket"]' },
+  pharmacy:    { icon:'💊', label:'Farmacias',     query:'node["amenity"="pharmacy"]' }
+};
+
+/* =====================================================
+   STATE
+   ===================================================== */
+const ESTADO_INICIAL = { tareas: [], historial: {}, segundosEnfoque: 0, nombre: '', metaDiaria: 5, ubicacion: null, device: null, weather: null };
+let state = load();
+function load() { try { const r = localStorage.getItem(LS_KEY); return r ? { ...ESTADO_INICIAL, ...JSON.parse(r) } : { ...ESTADO_INICIAL }; } catch(e) { return { ...ESTADO_INICIAL }; } }
+function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {} }
+
+/* =====================================================
+   UTILS
+   ===================================================== */
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+function todayStr(d = new Date()) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function humanMin(m) { if(!m) return ''; if(m<60) return m+'m'; const h=Math.floor(m/60),r=m%60; return r?`${h}h ${r}m`:`${h}h`; }
+function humanSec(s) { if(!s) return '0m'; if(s<60) return s+'s'; const m=Math.floor(s/60); if(m<60) return m+'m'; const h=Math.floor(m/60); return h+'h '+(m%60)+'m'; }
+function fechaBonita(str) { const hoy=todayStr(), man=todayStr(new Date(Date.now()+86400000)); if(str===hoy) return 'Hoy'; if(str===man) return 'Mañana'; const [y,m,d]=str.split('-'); return `${d}/${m}`; }
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pesoP = { alta:0, media:1, baja:2 };
+function haptic(ms=8) { if(navigator.vibrate) try { navigator.vibrate(ms); } catch(e){} }
+function distKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function formatDist(km) {
+  if (km < 1) return Math.round(km*1000) + ' m';
+  if (km < 10) return km.toFixed(1) + ' km';
+  return Math.round(km) + ' km';
+}
+
+/* =====================================================
+   TOASTS / SOUND
+   ===================================================== */
+function toast(msg, emoji='✅') {
+  const wrap = $('#toasts');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span>${emoji}</span><span>${esc(msg)}</span>`;
+  wrap.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 300); }, 2600);
+}
+let audioCtx = null;
+function beep(freq=880, dur=0.15, type='sine') {
+  try {
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.type=type; o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.18, audioCtx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime+dur+0.02);
+  } catch(e){}
+}
+function soundSuccess(){ beep(660,0.1); setTimeout(()=>beep(880,0.1),90); setTimeout(()=>beep(1180,0.18),190); }
+function soundTimer(){ beep(520,0.22,'triangle'); setTimeout(()=>beep(520,0.22,'triangle'),280); setTimeout(()=>beep(700,0.4,'triangle'),560); }
+
+/* =====================================================
+   DEVICE
+   ===================================================== */
+function detectarDispositivo() {
+  const ua = navigator.userAgent;
+  let os='Desconocido', osIcon='💻';
+  if(/iPhone|iPad|iPod/.test(ua)) { os = /iPad/.test(ua)?'iPadOS':'iOS'; osIcon='📱'; }
+  else if(/Android/.test(ua)) { const m=ua.match(/Android\s([\d.]+)/); os='Android'+(m?' '+m[1].split('.')[0]:''); osIcon='🤖'; }
+  else if(/Mac OS X/.test(ua)) { os='macOS'; osIcon='💻'; }
+  else if(/Windows/.test(ua)) { const m=ua.match(/Windows NT ([\d.]+)/); const v={'10.0':'10/11','6.3':'8.1','6.2':'8','6.1':'7'}[m?.[1]]||''; os='Windows'+(v?' '+v:''); osIcon='🪟'; }
+  else if(/Linux/.test(ua)) { os='Linux'; osIcon='🐧'; }
+  else if(/CrOS/.test(ua)) { os='ChromeOS'; osIcon='💻'; }
+  let browser='Desconocido', brIcon='🌐';
+  if(/Edg\//.test(ua)) { browser='Edge'; brIcon='🌊'; }
+  else if(/OPR\/|Opera/.test(ua)) { browser='Opera'; brIcon='🎭'; }
+  else if(/CriOS/.test(ua)) { browser='Chrome iOS'; brIcon='🌐'; }
+  else if(/FxiOS/.test(ua)) { browser='Firefox iOS'; brIcon='🦊'; }
+  else if(/Chrome\//.test(ua)) { browser='Chrome'; brIcon='🌐'; }
+  else if(/Safari\//.test(ua)) { browser='Safari'; brIcon='🧭'; }
+  else if(/Firefox\//.test(ua)) { browser='Firefox'; brIcon='🦊'; }
+  let modelo='';
+  if(/iPhone/.test(ua)) modelo='iPhone';
+  else if(/Android/.test(ua)) { const m=ua.match(/Android[^;]*;\s*([^)]+?)(?:\s+Build|\))/); if(m) modelo=m[1].trim().split(' ').slice(0,2).join(' '); }
+  return {
+    os, osIcon, browser, brIcon, modelo,
+    cores: navigator.hardwareConcurrency || '?',
+    conn: navigator.connection?.effectiveType?.toUpperCase(),
+    lang: navigator.language || 'es',
+    tz: Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+    screenRes: `${screen.width}×${screen.height}`,
+    touch: 'ontouchstart' in window || navigator.maxTouchPoints > 0
+  };
+}
+function renderDeviceChips(dev) {
+  const wrap = $('#deviceInfo');
+  const chips = [
+    { ic: dev.osIcon, txt: dev.os + (dev.modelo && dev.modelo !== 'iPhone' ? ' · '+dev.modelo : '') },
+    { ic: dev.brIcon, txt: dev.browser },
+    { ic: '🌐', txt: dev.lang.split('-')[0].toUpperCase() },
+    { ic: '🕐', txt: dev.tz.split('/').pop().replace(/_/g,' ') },
+    { ic: '⚡', txt: dev.cores+' núcleos' },
+    { ic: '📐', txt: dev.screenRes }
+  ];
+  if(dev.conn) chips.push({ ic:'📶', txt:dev.conn });
+  wrap.innerHTML = chips.map(c => `<span class="device-chip"><span class="ic">${c.ic}</span>${esc(c.txt)}</span>`).join('');
+}
+
+/* =====================================================
+   CLOCK
+   ===================================================== */
+function tickClock() {
+  const now = new Date();
+  const hh=String(now.getHours()).padStart(2,'0'), mm=String(now.getMinutes()).padStart(2,'0'), ss=String(now.getSeconds()).padStart(2,'0');
+  const t=$('#clockTime'), s=$('#clockSec');
+  if(t) t.textContent = `${hh}:${mm}`;
+  if(s) s.textContent = `:${ss}`;
+  const h = now.getHours();
+  let hi, name;
+  if(h<6) { hi='Buenas noches 🌙'; name='A descansar'; }
+  else if(h<12) { hi='Buenos días ☀️'; name='A por el día'; }
+  else if(h<20) { hi='Buenas tardes 🌤️'; name='Sigamos'; }
+  else { hi='Buenas noches 🌆'; name='Cerrando el día'; }
+  if(state.nombre) hi = `Hola, ${state.nombre}`;
+  const gh=$('#greetHi'), gn=$('#greetName');
+  if(gh) gh.textContent = hi;
+  if(gn) gn.textContent = name;
+}
+setInterval(tickClock, 1000);
+
+/* =====================================================
+   GEOLOCALIZACIÓN
+   ===================================================== */
+async function detectarUbicacion() {
+  if(state.ubicacion && state.ubicacion.ts && (Date.now() - state.ubicacion.ts) < 6*3600*1000) return state.ubicacion;
+  try {
+    const gps = await getGPS();
+    if(gps) {
+      const loc = { lat: gps.coords.latitude, lon: gps.coords.longitude, src:'gps', ts: Date.now(), precision: gps.coords.accuracy };
+      Object.assign(loc, await reverseGeocode(loc.lat, loc.lon));
+      state.ubicacion = loc; save(); return loc;
+    }
+  } catch(e) { console.log('GPS no disponible:', e.message); }
+  try {
+    const ip = await getIPLocation();
+    if(ip) { const loc = { ...ip, src:'ip', ts:Date.now() }; state.ubicacion = loc; save(); return loc; }
+  } catch(e) { console.log('IP geolocation falló:', e.message); }
+  return null;
+}
+function getGPS() {
+  return new Promise((res, rej) => {
+    if(!navigator.geolocation) return rej(new Error('no soportado'));
+    navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy:true, timeout:12000, maximumAge:0 });
+  });
+}
+async function reverseGeocode(lat, lon) {
+  try {
+    const r = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=es`);
+    const j = await r.json();
+    return {
+      ciudad: j.city || j.locality || j.principalSubdivision || j.countryName || 'Tu zona',
+      region: j.principalSubdivision || '',
+      pais: j.countryName || '',
+      codigoPais: j.countryCode || ''
+    };
+  } catch(e) { return { ciudad:'Tu zona', region:'', pais:'' }; }
+}
+async function getIPLocation() {
+  const servicios = [
+    { url:'https://ipwho.is/', parse: j => j.success !== false && j.latitude ? { lat:j.latitude, lon:j.longitude, ciudad:j.city||j.region||'Tu zona', region:j.region||'', pais:j.country||'', codigoPais:j.country_code||'' } : null },
+    { url:'https://ipapi.co/json/', parse: j => j.latitude ? { lat:j.latitude, lon:j.longitude, ciudad:j.city||j.region||'Tu zona', region:j.region||'', pais:j.country_name||'', codigoPais:j.country_code||'' } : null },
+    { url:'https://ipinfo.io/json', parse: j => j.loc ? (() => { const [lat,lon]=j.loc.split(',').map(Number); return { lat, lon, ciudad:j.city||'Tu zona', region:j.region||'', pais:j.country||'' }; })() : null },
+    { url:'http://ip-api.com/json/?fields=status,country,countryCode,regionName,city,lat,lon,query', parse: j => j.status==='success' ? { lat:j.lat, lon:j.lon, ciudad:j.city||j.regionName||'Tu zona', region:j.regionName||'', pais:j.country||'', codigoPais:j.countryCode||'' } : null }
+  ];
+  for(const s of servicios) {
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 5000);
+      const r = await fetch(s.url, { signal: ctrl.signal });
+      clearTimeout(t);
+      const j = await r.json();
+      const parsed = s.parse(j);
+      if(parsed) return parsed;
+    } catch(e) { continue; }
+  }
+  throw new Error('Todos los servicios fallaron');
+}
+
+/* =====================================================
+   WEATHER
+   ===================================================== */
+let weatherLoading = false;
+
+async function cargarClima(force=false) {
+  if(weatherLoading) return;
+  weatherLoading = true;
+  const rb = $('#weatherRefresh');
+  rb?.classList.add('spinning');
+  $('#weatherBody').innerHTML = `<div class="weather-loading"><div class="spinner"></div><span>Analizando tu ubicación…</span></div>`;
+  $('#locName').textContent = 'Detectando…';
+  if(force) { state.ubicacion = null; save(); }
+
+  const loc = await detectarUbicacion();
+  if(!loc) { renderWeatherError(); weatherLoading=false; rb?.classList.remove('spinning'); return; }
+
+  const srcLabel = loc.src==='gps'?'GPS':loc.src==='ip'?'IP':'';
+  const nombreCompleto = loc.ciudad + (loc.pais && !loc.ciudad.includes(loc.pais) ? ', '+loc.pais : '');
+  $('#locName').innerHTML = esc(nombreCompleto) + (srcLabel ? ` <span class="src">· ${srcLabel}</span>` : '');
+
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${loc.lat}&longitude=${loc.lon}` +
+      `&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,precipitation` +
+      `&hourly=temperature_2m,weather_code,precipitation_probability,uv_index,is_day` +
+      `&daily=temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset,uv_index_max,precipitation_probability_max` +
+      `&timezone=auto&forecast_days=1`;
+    const r = await fetch(url);
+    const data = await r.json();
+    state.weather = data; save();
+    renderWeather(data);
+    generarPlanes(data, loc);
+  } catch(e) {
+    $('#weatherBody').innerHTML = `<div class="weather-error"><div class="msg">⚠️ No se pudo obtener el clima ahora mismo.</div><button class="btn-mini" onclick="cargarClima(true)">🔄 Reintentar</button></div>`;
+  }
+  weatherLoading = false;
+  rb?.classList.remove('spinning');
+}
+
+function renderWeather(data) {
+  const cur = data.current, daily = data.daily;
+  const code = cur.weather_code;
+  const isDay = cur.is_day === 1;
+  const [desc, icon] = WMO[code] || ['—','🌡️'];
+  const nightIcon = { 0:'🌙',1:'🌙',2:'☁️' }[code];
+  const finalIcon = (!isDay && nightIcon) ? nightIcon : icon;
+  $('#weatherBody').innerHTML = `
+    <div class="weather-main">
+      <div class="weather-icon">${finalIcon}</div>
+      <div><div class="weather-temp">${Math.round(cur.temperature_2m)}<span class="deg">°</span></div></div>
+    </div>
+    <div class="weather-desc">${desc}</div>
+    <div class="weather-details">
+      <div class="wd-item"><span class="ico">🌡️</span> Sensación <span class="val">${Math.round(cur.apparent_temperature)}°</span></div>
+      <div class="wd-item"><span class="ico">💧</span> Humedad <span class="val">${cur.relative_humidity_2m}%</span></div>
+      <div class="wd-item"><span class="ico">💨</span> Viento <span class="val">${Math.round(cur.wind_speed_10m)} km/h</span></div>
+      <div class="wd-item"><span class="ico">📈</span> Máx <span class="val">${Math.round(daily.temperature_2m_max[0])}°</span></div>
+      <div class="wd-item"><span class="ico">📉</span> Mín <span class="val">${Math.round(daily.temperature_2m_min[0])}°</span></div>
+    </div>`;
+  $('#plansPill').textContent = `${finalIcon} ${Math.round(cur.temperature_2m)}° · ${desc}`;
+}
+
+function renderWeatherError() {
+  $('#locName').textContent = 'Sin ubicación';
+  $('#weatherBody').innerHTML = `
+    <div class="weather-error">
+      <div class="msg">No pudimos detectar tu ubicación. Activa el GPS o escribe tu ciudad.</div>
+      <button class="btn-mini" id="btnAskGPS">📍 Activar GPS</button>
+      <button class="btn-mini" id="btnManualCity">✏️ Escribir ciudad</button>
+    </div>`;
+  document.getElementById('btnAskGPS').onclick = () => { state.ubicacion=null; save(); cargarClima(true); };
+  document.getElementById('btnManualCity').onclick = () => { const c = prompt('Escribe tu ciudad:'); if(c && c.trim()) buscarCiudadManual(c.trim()); };
+  $('#plansPill').textContent = '❓ —';
+}
+
+async function buscarCiudadManual(ciudad) {
+  try {
+    const r = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(ciudad)}&count=1&language=es`);
+    const j = await r.json();
+    if(j.results && j.results[0]) {
+      const g = j.results[0];
+      state.ubicacion = { lat:g.latitude, lon:g.longitude, ciudad:g.name, region:g.admin1||'', pais:g.country||'', codigoPais:g.country_code||'', src:'manual', ts:Date.now() };
+      save(); cargarClima();
+      toast('Ubicación actualizada', '📍');
+    } else toast('No encontré esa ciudad', '⚠️');
+  } catch(e) { toast('Error al buscar ciudad', '⚠️'); }
+}
+
+$('#weatherRefresh')?.addEventListener('click', () => { haptic(8); cargarClima(true); });
+
+/* =====================================================
+   MOTOR DE RECOMENDACIONES
+   ===================================================== */
+function generarPlanes(w, loc) {
+  const cur = w.current, daily = w.daily, hourly = w.hourly;
+  const temp = cur.temperature_2m;
+  const feels = cur.apparent_temperature;
+  const code = cur.weather_code;
+  const isDay = cur.is_day === 1;
+  const wind = cur.wind_speed_10m;
+  const humidity = cur.relative_humidity_2m;
+  const uvMax = daily.uv_index_max?.[0] ?? 0;
+
+  const now = new Date();
+  const hour = now.getHours();
+
+  const llueve = [51,53,55,61,63,65,80,81,82,95,96,99].includes(code);
+  const chubascos = [80,81,82].includes(code);
+  const nublado = [2,3,45,48].includes(code);
+  const soleado = [0,1].includes(code) && isDay;
+  const nieva = [71,73,75].includes(code);
+  const tormenta = [95,96,99].includes(code);
+  const frio = feels < 12;
+  const fresco = feels >= 12 && feels < 18;
+  const templado = feels >= 18 && feels < 26;
+  const caluroso = feels >= 26 && feels < 32;
+  const bochorno = feels >= 32;
+  const vientoFuerte = wind > 30;
+  const uvAlto = uvMax >= 6;
+
+  const noche = hour >= 20 || hour < 6;
+  const mañana = hour >= 6 && hour < 12;
+  const tarde = hour >= 12 && hour < 20;
+
+  const recos = [];
+
+  if(tormenta) {
+    recos.push({ icon:'⛈️', accent:'accent-purple', ttl:'Quédate en casa si puedes', dsc:'Hay tormenta eléctrica en tu zona. Si no es urgente salir, mejor un plan indoor: peli, libro, series o trabajar desde casa.' });
+    recos.push({ icon:'📚', accent:'accent-blue', ttl:'Buen momento para leer o estudiar', dsc:'La lluvia fuerte es ideal para concentrarte. Aprovecha para adelantar algo que tengas pendiente.' });
+    recos.push({ icon:'🎬', accent:'accent-pink', ttl:'Maratón de pelis o series', dsc:'Día perfecto para no salir. Prepara palomitas y ponte cómodo.' });
+  }
+  if(llueve && !tormenta) {
+    recos.push({ icon:'☔', accent:'accent-blue', ttl:'Lleva paraguas si sales', dsc:`Hay ${chubascos?'chubascos':'lluvia'} en tu zona. Si puedes, prioriza planes bajo techo.` });
+    recos.push({ icon:'☕', accent:'accent-orange', ttl:'Café con calma', dsc:'Un café o una librería cercana es un plan perfecto con lluvia. Ambiente acogedor asegurado.' });
+    recos.push({ icon:'🏛️', accent:'accent-purple', ttl:'Museo o centro cultural', dsc:'Los museos son el plan perfecto con lluvia. Consulta qué exposiciones hay cerca.' });
+    recos.push({ icon:'🎬', accent:'accent-pink', ttl:'Sesión de cine', dsc:'Un cine cerca es un clásico para días de lluvia. Mira cartelera.' });
+    recos.push({ icon:'🛒', accent:'accent-teal', ttl:'Recados bajo techo', dsc:'Buen momento para hacer la compra o resolver recados en centros comerciales.' });
+  }
+  if(nieva) {
+    recos.push({ icon:'❄️', accent:'accent-teal', ttl:'Abrígate bien si sales', dsc:'Está nevando. Chaqueta, guantes y calzado impermeable. Cuidado con el hielo en las aceras.' });
+    recos.push({ icon:'🍲', accent:'accent-orange', ttl:'Plan casero: sopa o chocolate caliente', dsc:'Día perfecto para cocinar algo calentito y quedarte en casa.' });
+  }
+  if(soleado && (caluroso || bochorno)) {
+    recos.push({ icon:'🏖️', accent:'accent-yellow', ttl:'Busca sombra o agua', dsc:`Hace ${Math.round(feels)}° y hay sol fuerte. Parque con sombra, piscina, playa o terraza con toldo son tu mejor opción.` });
+    recos.push({ icon:'🍦', accent:'accent-pink', ttl:'Helado o bebida fría', dsc:'Día perfecto para un helado, un smoothie o una limonada en algún sitio fresquito.' });
+    if(uvAlto) recos.push({ icon:'🧴', accent:'accent-orange', ttl:'Protector solar sí o sí', dsc:`El índice UV hoy es ${Math.round(uvMax)} (alto). No salgas sin crema, gorra y gafas.` });
+    if(!noche) recos.push({ icon:'🌳', accent:'accent-green', ttl:'Parque con sombra', dsc:'Los parques con árboles son perfectos: fresco, sombra y aire libre. Lleva agua.' });
+  }
+  if(soleado && (templado || fresco)) {
+    recos.push({ icon:'🚶', accent:'accent-green', ttl:'Sal a caminar o pasear', dsc:`Hace ${Math.round(temp)}° y está despejado. Aprovecha para caminar, correr, bici o simplemente pasear al aire libre.` });
+    if(!noche) recos.push({ icon:'🧺', accent:'accent-green', ttl:'Plan de parque o picnic', dsc:'Día ideal para parque, jardín o incluso un picnic improvisado. Llévate algo de comer.' });
+    recos.push({ icon:'📸', accent:'accent-purple', ttl:'Buen momento para fotos', dsc:'La luz con cielo despejado hace que cualquier rincón se vea bonito. Aprovecha.' });
+    if(mañana) recos.push({ icon:'☕', accent:'accent-orange', ttl:'Desayuno en terraza', dsc:'Mañana soleada = terraza con café. Un lujo simple que cambia el día.' });
+    if(tarde && hour >= 17) recos.push({ icon:'🌅', accent:'accent-yellow', ttl:'Atrapa el atardecer', dsc:'Busca un mirador, azotea o punto alto para ver el atardecer. Vale la pena.' });
+  }
+  if(nublado && !llueve) {
+    recos.push({ icon:'🚶', accent:'accent-blue', ttl:'Buen día para caminar sin sol', dsc:'Nublado y sin lluvia es un clima perfecto para caminar, hacer recados o pasear sin agobios de calor.' });
+    recos.push({ icon:'📷', accent:'accent-purple', ttl:'Fotos con luz suave', dsc:'La luz difusa de día nublado es ideal para fotos. Buen momento para capturar la ciudad.' });
+    if(templado || fresco) recos.push({ icon:'🏃', accent:'accent-green', ttl:'Deporte al aire libre', dsc:'Sin sol directo se entrena mejor. Corre, bici o camina sin sufrir el calor.' });
+  }
+  if(frio && !llueve && !nieva) {
+    recos.push({ icon:'🧣', accent:'accent-teal', ttl:'Abrígate bien', dsc:`Hace ${Math.round(feels)}° de sensación. Chaqueta, bufanda y capas. Si sales, que sea con buen abrigo.` });
+    recos.push({ icon:'☕', accent:'accent-orange', ttl:'Café o chocolate caliente', dsc:'Un buen plan con frío: cafetería con algo calentito y buena charla.' });
+    recos.push({ icon:'🍜', accent:'accent-orange', ttl:'Comida caliente', dsc:'Sopa, ramen, caldo o guiso. Día perfecto para algo que entre calentito.' });
+  }
+  if(caluroso && !llueve && humidity < 40) {
+    recos.push({ icon:'💧', accent:'accent-teal', ttl:'Hidrátate constantemente', dsc:'Calor seco y baja humedad. Bebe agua aunque no tengas sed. Evita el sol del mediodía.' });
+  }
+  if(vientoFuerte) {
+    recos.push({ icon:'💨', accent:'accent-teal', ttl:'Ojo con el viento', dsc:`Rachas de ${Math.round(wind)} km/h. Evita parques con árboles altos y actividades al aire libre expuestas.` });
+  }
+  if(noche) {
+    recos.push({ icon:'🍽️', accent:'accent-red', ttl:'Plan de cena', dsc:'A esta hora, cena tranquila en algún restaurante cerca o pide algo rico a domicilio.' });
+    recos.push({ icon:'🍺', accent:'accent-yellow', ttl:'Copa o cerveza tranquila', dsc:'Un bar tranquilo con buena música siempre es buena idea de noche.' });
+    recos.push({ icon:'🎬', accent:'accent-pink', ttl:'Cine nocturno', dsc:'Sesión de cine, ya sea en casa o en una sala. Perfecto para cerrar el día.' });
+    if(hour >= 23) recos.push({ icon:'😴', accent:'accent-blue', ttl:'Piensa en dormir pronto', dsc:'Se acerca la hora. Un buen descanso hace que mañana rindas el triple.' });
+  }
+  if(mañana && !noche) {
+    recos.push({ icon:'🌅', accent:'accent-yellow', ttl:'Arranca el día con movimiento', dsc:'Una caminata, estiramientos o un café con calma te cambian la mañana entera.' });
+    recos.push({ icon:'📋', accent:'accent-blue', ttl:'Revisa tu día en 5 min', dsc:'Antes de meterte en el lío, dedica 5 minutos a ver qué es lo importante hoy.' });
+  }
+  if(tarde && hour >= 14 && hour < 18) {
+    recos.push({ icon:'☕', accent:'accent-orange', ttl:'Pausa de media tarde', dsc:'Un café o un té con algo dulce te reactiva para lo que queda del día.' });
+  }
+  if(!noche) recos.push({ icon:'🚰', accent:'accent-teal', ttl:'Hidrátate', dsc:'Bebe agua. Parece una tontería pero es lo que más te va a mantener con energía.' });
+  recos.push({ icon:'📞', accent:'accent-purple', ttl:'Llama a alguien que aprecies', dsc:'Un mensaje o llamada rápida a alguien siempre mejora el día. Y a la otra persona también.' });
+
+  let mejorHora = null, mejorScore = -999;
+  if(hourly && hourly.time) {
+    const startIdx = hourly.time.findIndex(t => new Date(t).getHours() >= hour);
+    const endIdx = Math.min(startIdx + 12, hourly.time.length);
+    for(let i = Math.max(0, startIdx); i < endIdx; i++) {
+      const h = new Date(hourly.time[i]).getHours();
+      if(h < 7 || h > 22) continue;
+      const t = hourly.temperature_2m[i];
+      const c = hourly.weather_code[i];
+      const p = hourly.precipitation_probability[i] ?? 0;
+      let score = 100;
+      if(p > 40) score -= 50;
+      if(p > 70) score -= 40;
+      if([61,63,65,80,81,82,95,96,99].includes(c)) score -= 60;
+      if(t < 5 || t > 33) score -= 30;
+      if(t >= 15 && t <= 26) score += 20;
+      if([0,1,2].includes(c)) score += 15;
+      if(h >= 8 && h <= 11) score += 8;
+      if(h >= 17 && h <= 20) score += 8;
+      if(score > mejorScore) { mejorScore = score; mejorHora = { h, t, c, p }; }
+    }
+  }
+
+  renderPlanes(recos, mejorHora, w, loc);
+  renderRecoHero(recos[0]);
+  cargarLugaresCerca();
+}
+
+function renderRecoHero(r) {
+  if(!r) return;
+  $('#recoHeroIcon').textContent = r.icon;
+  $('#recoHeroTitle').textContent = r.ttl;
+  $('#recoHeroDesc').textContent = r.dsc;
+}
+$('#recoHero')?.addEventListener('click', () => { switchView('plan'); haptic(8); });
+
+function renderPlanes(recos, mejorHora, w, loc) {
+  const cur = w.current;
+  $('#plansSub').textContent = `${loc.ciudad} · ${WMO[cur.weather_code]?.[0] || ''} · ${Math.round(cur.temperature_2m)}°`;
+
+  const bt = $('#bestTimeCard');
+  if(mejorHora) {
+    bt.style.display = 'flex';
+    const hh = String(mejorHora.h).padStart(2,'0');
+    $('#btVal').textContent = `Sobre las ${hh}:00`;
+    const hhEnd = String((mejorHora.h+1)%24).padStart(2,'0');
+    const desc = WMO[mejorHora.c]?.[0] || '';
+    $('#btSub').textContent = `${Math.round(mejorHora.t)}° · ${desc}${mejorHora.p > 20 ? ' · '+mejorHora.p+'% lluvia' : ''}. Ventana hasta las ${hhEnd}:00 aprox.`;
+  } else bt.style.display = 'none';
+
+  const list = $('#recoList');
+  list.innerHTML = recos.map((r, i) => `
+    <div class="reco-card ${r.accent || ''}" style="animation-delay:${i*0.04}s">
+      <div class="ic">${r.icon}</div>
+      <div class="body">
+        <div class="ttl">${esc(r.ttl)}</div>
+        <div class="dsc">${esc(r.dsc)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* =====================================================
+   LUGARES CERCANOS — Múltiples servidores + fallback Nominatim
+   ===================================================== */
+let placesCache = {};
+let currentCat = 'reco';
+
+function categoriasRecomendadas() {
+  const w = state.weather;
+  if(!w) return 'cafe';
+  const cur = w.current;
+  const code = cur.weather_code;
+  const hour = new Date().getHours();
+  const llueve = [51,53,55,61,63,65,80,81,82,95,96,99].includes(code);
+  const noche = hour >= 20 || hour < 6;
+  const mañana = hour >= 6 && hour < 12;
+  const tarde = hour >= 12 && hour < 18;
+  if(noche) return 'bar';
+  if(llueve) return 'museum';
+  if(mañana) return 'cafe';
+  if(tarde && cur.temperature_2m > 22) return 'park';
+  if(tarde) return 'cafe';
+  return 'restaurant';
+}
+
+async function cargarLugaresCerca() {
+  const list = $('#placesList');
+  if(!state.ubicacion) { list.innerHTML = `<div class="places-loading">📍 Sin ubicación</div>`; return; }
+
+  let cat = currentCat;
+  if(cat === 'reco') cat = categoriasRecomendadas();
+
+  $('#placesCount').textContent = 'cargando…';
+
+  if(placesCache[cat]) { renderLugares(placesCache[cat], cat); return; }
+
+  list.innerHTML = `<div class="places-loading"><div class="spinner"></div><span>Buscando cerca…</span></div>`;
+
+  const { lat, lon } = state.ubicacion;
+  const radius = (cat === 'museum' || cat === 'cinema') ? 4000 : 2000;
+  const query = `[out:json][timeout:20];(${PLACE_CATS[cat].query}(around:${radius},${lat},${lon}););out body 30;`;
+
+  // Múltiples servidores Overpass de respaldo
+  const endpoints = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://overpass.private.coffee/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+    'https://overpass.osm.jp/api/interpreter'
+  ];
+
+  let lugares = null;
+
+  for(const endpoint of endpoints) {
+    try {
+      const url = endpoint + '?data=' + encodeURIComponent(query);
+      const ctrl = new AbortController();
+      const to = setTimeout(() => ctrl.abort(), 12000);
+      const r = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(to);
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      lugares = (data.elements || [])
+        .filter(e => e.tags && e.tags.name && e.lat && e.lon)
+        .map(e => ({
+          name: e.tags.name,
+          lat: e.lat, lon: e.lon,
+          dist: distKm(lat, lon, e.lat, e.lon),
+          tags: e.tags
+        }))
+        .sort((a,b) => a.dist - b.dist)
+        .slice(0, 12);
+      console.log('✅ Lugares cargados desde:', endpoint, '→', lugares.length, 'resultados');
+      break;
+    } catch(e) {
+      console.log('❌ Falló', endpoint, '→', e.message);
+      continue;
+    }
+  }
+
+  // Si TODOS los Overpass fallaron, intenta Nominatim
+  if(lugares === null) {
+    console.log('🔄 Overpass agotado, probando Nominatim…');
+    lugares = await buscarConNominatim(lat, lon, cat);
+  }
+
+  // Si nada funcionó, muestra error con reintento
+  if(lugares === null) {
+    list.innerHTML = `
+      <div class="places-loading" style="flex-direction:column;text-align:center;gap:8px">
+        <span style="font-size:28px">📡</span>
+        <span style="color:var(--text-2)">No pude conectar con el servicio de mapas.</span>
+        <span style="color:var(--text-3);font-size:12px">Revisa tu conexión o inténtalo de nuevo.</span>
+        <button class="btn-mini" id="btnRetryPlaces" style="margin-top:10px">🔄 Reintentar</button>
+      </div>`;
+    $('#placesCount').textContent = '—';
+    setTimeout(() => {
+      const rb = document.getElementById('btnRetryPlaces');
+      if(rb) rb.onclick = () => { placesCache = {}; cargarLugaresCerca(); };
+    }, 50);
+    return;
+  }
+
+  placesCache[cat] = lugares;
+  renderLugares(lugares, cat);
+}
+
+async function buscarConNominatim(lat, lon, cat) {
+  const queries = {
+    cafe: 'café', restaurant: 'restaurante', park: 'parque', museum: 'museo',
+    cinema: 'cine', bar: 'bar', gym: 'gimnasio', supermarket: 'supermercado', pharmacy: 'farmacia'
+  };
+  const q = queries[cat] || 'café';
+  const box = 0.15;
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&lat=${lat}&lon=${lon}&limit=20&addressdetails=1&extratags=1&bounded=1&viewbox=${lon-box},${lat+box},${lon+box},${lat-box}`;
+    const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    const lugares = data
+      .filter(p => p.lat && p.lon && p.display_name)
+      .map(p => ({
+        name: p.name || p.display_name.split(',')[0],
+        lat: parseFloat(p.lat), lon: parseFloat(p.lon),
+        dist: distKm(lat, lon, parseFloat(p.lat), parseFloat(p.lon)),
+        tags: p.extratags || {}
+      }))
+      .sort((a,b) => a.dist - b.dist)
+      .slice(0, 12);
+    console.log('✅ Nominatim →', lugares.length, 'resultados');
+    return lugares;
+  } catch(e) {
+    console.log('❌ Nominatim falló:', e.message);
+    return null;
+  }
+}
+
+function renderLugares(lugares, cat) {
+  const list = $('#placesList');
+  const c = PLACE_CATS[cat] || { icon:'📍', label:'Lugares' };
+  $('#placesCount').textContent = lugares.length + ' cerca';
+
+  if(!lugares.length) {
+    list.innerHTML = `<div class="places-loading">😕 Nada por aquí. Prueba otra categoría.</div>`;
+    return;
+  }
+
+  list.innerHTML = lugares.map((p, i) => {
+    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lon}`;
+    const extra = [];
+    if(p.tags?.cuisine) extra.push(p.tags.cuisine.split(';')[0]);
+    if(p.tags?.opening_hours === '24/7') extra.push('24h');
+    if(p.tags?.['addr:street']) extra.push(p.tags['addr:street']);
+    return `
+      <div class="place" style="animation-delay:${i*0.03}s">
+        <div class="p-ic">${c.icon}</div>
+        <div class="p-body">
+          <div class="p-name">${esc(p.name)}</div>
+          <div class="p-meta">
+            <span class="dist">📍 ${formatDist(p.dist)}</span>
+            ${extra.length ? `<span>${esc(extra.join(' · '))}</span>` : ''}
+          </div>
+        </div>
+        <a class="p-map" href="${mapUrl}" target="_blank" rel="noopener" title="Abrir en mapas">🗺️</a>
+      </div>`;
+  }).join('');
+}
+
+$('#placesTabs')?.addEventListener('click', e => {
+  const tab = e.target.closest('.place-tab');
+  if(!tab) return;
+  $$('.place-tab').forEach(t => t.classList.remove('on'));
+  tab.classList.add('on');
+  currentCat = tab.dataset.cat;
+  haptic(6);
+  cargarLugaresCerca();
+});
+
+/* =====================================================
+   VIEWS
+   ===================================================== */
+function switchView(name) {
+  $$('.view').forEach(v => v.classList.toggle('active', v.dataset.view === name));
+  $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === name));
+  $('#fab').style.display = name === 'home' ? 'grid' : 'none';
+  haptic(6);
+  if(name === 'plan' && state.weather && state.ubicacion) generarPlanes(state.weather, state.ubicacion);
+}
+$$('.nav-item').forEach(n => n.addEventListener('click', () => switchView(n.dataset.view)));
+
+/* =====================================================
+   TASKS
+   ===================================================== */
+let filtro = 'hoy';
+function tareasFiltradas() {
+  const hoy = todayStr();
+  switch(filtro) {
+    case 'hoy': return state.tareas.filter(t => (!t.done && t.fecha <= hoy) || (t.done && t.doneFecha === hoy));
+    case 'pend': return state.tareas.filter(t => !t.done);
+    case 'done': return state.tareas.filter(t => t.done).reverse();
+    default: return [...state.tareas];
+  }
+}
+function ordenar(arr) {
+  return [...arr].sort((a,b) => {
+    if(a.done !== b.done) return a.done ? 1 : -1;
+    const p = pesoP[a.prioridad] - pesoP[b.prioridad];
+    if(p) return p;
+    if(a.fecha !== b.fecha) return a.fecha < b.fecha ? -1 : 1;
+    return a.creado - b.creado;
+  });
+}
+function renderTasks() {
+  const list = $('#taskList');
+  const tasks = ordenar(tareasFiltradas());
+  if(!tasks.length) {
+    const msgs = {
+      hoy:['🌤️','Sin tareas para hoy','Añade una con el botón + y empieza el día'],
+      pend:['🎉','¡Todo hecho!','No te queda nada pendiente. Disfruta.'],
+      done:['📭','Aún nada completado','El primer paso es el más difícil'],
+      all:['📝','Tu lista está vacía','Pulsa el botón + para añadir tu primera tarea']
+    };
+    const [em,t,s] = msgs[filtro] || msgs.all;
+    list.innerHTML = `<div class="empty"><span class="em">${em}</span><h3>${t}</h3><p>${s}</p></div>`;
+  } else list.innerHTML = tasks.map(taskHTML).join('');
+  updateCounters(); updateProgress(); updateStats(); save();
+}
+function taskHTML(t) {
+  const chips = [];
+  const pIco = t.prioridad==='alta'?'🔴':t.prioridad==='media'?'🟡':'🟢';
+  chips.push(`<span class="chip p-${t.prioridad}">${pIco} ${t.prioridad}</span>`);
+  chips.push(`<span class="chip">${t.categoria}</span>`);
+  if(t.est) chips.push(`<span class="chip time">⏱ ${humanMin(t.est)}</span>`);
+  if(t.fecha && t.fecha !== todayStr()) chips.push(`<span class="chip date">📅 ${fechaBonita(t.fecha)}</span>`);
+  if(t.segundos > 0) chips.push(`<span class="chip time">⚡ ${humanSec(t.segundos)}</span>`);
+  return `
+    <div class="task ${t.done?'done':''}" data-id="${t.id}" data-p="${t.prioridad}">
+      <button class="check ${t.done?'on':''}" data-act="toggle"></button>
+      <div class="task-body">
+        <div class="task-text" data-act="edit" spellcheck="false">${esc(t.texto)}</div>
+        <div class="task-meta">${chips.join('')}</div>
+      </div>
+      <div class="task-actions">
+        ${!t.done?`<button class="task-btn play" data-act="focus">▶</button>`:''}
+        ${!t.done?`<button class="task-btn play" data-act="dos">⚡</button>`:''}
+        <button class="task-btn del" data-act="del">✕</button>
+      </div>
+    </div>`;
+}
+function addTask() {
+  const inp = $('#inputTarea');
+  const txt = inp.value.trim();
+  if(!txt) { inp.focus(); return; }
+  state.tareas.push({
+    id:uid(), texto:txt,
+    prioridad: $('#selPrioridad').value,
+    categoria: $('#selCategoria').value,
+    est: parseInt($('#inputEst').value,10)||0,
+    fecha: $('#inputFecha').value || todayStr(),
+    done:false, creado:Date.now(), doneFecha:null, segundos:0
+  });
+  inp.value=''; $('#inputEst').value=''; $('#inputFecha').value=todayStr();
+  closeSheet(); renderTasks();
+  toast('Tarea añadida','📝'); haptic(15); beep(780,0.08);
+}
+function toggleTask(id) {
+  const t = state.tareas.find(x => x.id === id);
+  if(!t) return;
+  t.done = !t.done;
+  const hoy = todayStr();
+  if(t.done) {
+    t.doneFecha = hoy;
+    state.historial[hoy] = (state.historial[hoy]||0)+1;
+    soundSuccess(); haptic(20);
+    const hh = state.tareas.filter(x => x.done && x.doneFecha === hoy).length;
+    if(hh === state.metaDiaria) toast('¡Meta diaria! 🏆','🎉');
+    else toast(['¡Bien!','¡Eso es!','¡Sigue así!','¡Grande!','¡Una menos!'][Math.floor(Math.random()*5)],'✅');
+  } else {
+    if(t.doneFecha && state.historial[t.doneFecha]) state.historial[t.doneFecha] = Math.max(0, state.historial[t.doneFecha]-1);
+    t.doneFecha = null;
+  }
+  renderTasks();
+}
+function deleteTask(id) {
+  const i = state.tareas.findIndex(x => x.id === id);
+  if(i===-1) return;
+  state.tareas.splice(i,1); renderTasks();
+  toast('Tarea eliminada','🗑️'); haptic(12);
+}
+function editTask(id, el) {
+  const t = state.tareas.find(x => x.id === id);
+  if(!t) return;
+  el.contentEditable = 'true'; el.focus();
+  document.execCommand && document.execCommand('selectAll', false, null);
+  const done = () => {
+    el.contentEditable='false';
+    const n = el.textContent.trim();
+    if(n && n !== t.texto) { t.texto = n; save(); } else el.textContent = t.texto;
+    el.removeEventListener('blur', done);
+  };
+  el.addEventListener('blur', done);
+  el.addEventListener('keydown', e => {
+    if(e.key==='Enter'){ e.preventDefault(); el.blur(); }
+    if(e.key==='Escape'){ el.textContent = t.texto; el.blur(); }
+  });
+}
+$('#taskList').addEventListener('click', e => {
+  const btn = e.target.closest('[data-act]'); if(!btn) return;
+  const taskEl = btn.closest('.task'); if(!taskEl) return;
+  const id = taskEl.dataset.id, act = btn.dataset.act;
+  if(act==='toggle') toggleTask(id);
+  else if(act==='del') deleteTask(id);
+  else if(act==='focus') startFocus(id,25);
+  else if(act==='dos') startFocus(id,2);
+});
+$('#taskList').addEventListener('dblclick', e => {
+  const el = e.target.closest('.task-text'); if(!el) return;
+  editTask(el.closest('.task').dataset.id, el);
+});
+
+/* =====================================================
+   COUNTERS / PROGRESS / STATS
+   ===================================================== */
+function updateCounters() {
+  const hoy = todayStr();
+  const pend = state.tareas.filter(t => !t.done).length;
+  const done = state.tareas.filter(t => t.done).length;
+  const hoyC = state.tareas.filter(t => (!t.done && t.fecha <= hoy) || (t.done && t.doneFecha === hoy)).length;
+  $('#c-hoy').textContent = hoyC;
+  $('#c-pend').textContent = pend;
+  $('#c-done').textContent = done;
+  $('#taskBadge').textContent = hoyC + ' hoy';
+}
+function updateProgress() {
+  const hoy = todayStr();
+  const hechasHoy = state.tareas.filter(t => t.done && t.doneFecha === hoy).length;
+  const totalHoy = state.tareas.filter(t => t.fecha <= hoy || t.doneFecha === hoy).length;
+  const pct = totalHoy ? Math.round((hechasHoy/totalHoy)*100) : 0;
+  $('#ringPct').textContent = pct + '%';
+  const circ = 2*Math.PI*32;
+  $('#ringFg').style.strokeDashoffset = circ * (1 - pct/100);
+  let title, sub;
+  if(!totalHoy) { title='Día en progreso'; sub='Añade tu primera tarea'; }
+  else if(pct===100) { title='¡Día completado!'; sub='Eres una máquina 🚀'; }
+  else if(hechasHoy >= state.metaDiaria) { title='Meta superada 🔥'; sub=`${hechasHoy} tareas hechas hoy`; }
+  else { title=`${hechasHoy} de ${totalHoy}`; sub=`Meta: ${state.metaDiaria} tareas`; }
+  $('#progTitle').textContent = title;
+  $('#progSub').textContent = sub;
+  $('#qsHoy').textContent = hechasHoy;
+  $('#qsPend').textContent = state.tareas.filter(t => !t.done).length;
+  $('#qsRacha').textContent = calcularRacha();
+}
+function calcularRacha() {
+  let r = 0;
+  for(let i = 0; i < 365; i++) {
+    const d = todayStr(new Date(Date.now()-i*86400000));
+    if((state.historial[d]||0) > 0) r++;
+    else if(i===0) continue;
+    else break;
+  }
+  return r;
+}
+function updateStats() {
+  const hoy = todayStr();
+  const totalDone = state.tareas.filter(t => t.done).length;
+  let semana = 0;
+  for(let i = 0; i < 7; i++) semana += state.historial[todayStr(new Date(Date.now()-i*86400000))]||0;
+  const hechasHoy = state.tareas.filter(t => t.done && t.doneFecha === hoy).length;
+  const metaPct = state.metaDiaria ? Math.min(100, Math.round((hechasHoy/state.metaDiaria)*100)) : 0;
+  $('#stTotal').textContent = totalDone;
+  $('#stFocus').textContent = humanSec(state.segundosEnfoque);
+  $('#stWeek').textContent = semana;
+  $('#stMeta').textContent = metaPct + '%';
+  const racha = calcularRacha();
+  $('#streakNum').textContent = racha;
+  const msgs = ['Completa 1 tarea para empezar','¡Buen comienzo!','Vas cogiendo ritmo 💪','Racha sólida','Imparable 🔥','Nivel leyenda 👑'];
+  $('#streakMsg').textContent = msgs[Math.min(racha, msgs.length-1)];
+  $('#streakFlame').textContent = racha >= 3 ? '🔥' : racha >= 1 ? '✨' : '🔥';
+}
+
+/* =====================================================
+   TABS / SHEET
+   ===================================================== */
+$('#tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab'); if(!tab) return;
+  $$('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  filtro = tab.dataset.filter; haptic(6); renderTasks();
+});
+function openSheet() {
+  $('#sheetOverlay').classList.add('show');
+  $('#sheet').classList.add('show');
+  setTimeout(() => $('#inputTarea').focus(), 300);
+  haptic(8);
+}
+function closeSheet() {
+  $('#sheetOverlay').classList.remove('show');
+  $('#sheet').classList.remove('show');
+  $('#inputTarea').blur();
+}
+$('#fab').addEventListener('click', openSheet);
+$('#sheetOverlay').addEventListener('click', closeSheet);
+$('#sheetCancel').addEventListener('click', closeSheet);
+$('#sheetAdd').addEventListener('click', addTask);
+$('#inputTarea').addEventListener('keydown', e => { if(e.key==='Enter') addTask(); });
+
+/* =====================================================
+   TIMER
+   ===================================================== */
+const timer = { total:25*60, restante:25*60, running:false, interval:null, tareaId:null, mode:'focus' };
+function paintTimer() {
+  const m = Math.floor(timer.restante/60), s = timer.restante % 60;
+  $('#timerTime').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const st = $('#timerStatus');
+  if(timer.running) { st.textContent = timer.mode==='focus'?'● Enfocado':'☕ Descanso'; st.classList.add('on'); }
+  else if(timer.restante === timer.total) { st.textContent='Listo'; st.classList.remove('on'); }
+  else { st.textContent='Pausa'; st.classList.remove('on'); }
+  const wrap = $('#timerTaskWrap');
+  if(timer.tareaId) {
+    const t = state.tareas.find(x => x.id === timer.tareaId);
+    wrap.innerHTML = t ? `<div class="timer-current">🎯 ${esc(t.texto)}</div>` : '';
+  } else wrap.innerHTML = '';
+  $('#btnPlay').textContent = timer.running ? '⏸ Pausar' : '▶ Empezar';
+  const circ = 2*Math.PI*106;
+  const pct = timer.total ? (timer.total - timer.restante) / timer.total : 0;
+  $('#trFg').style.strokeDashoffset = circ * pct;
+  document.title = timer.running ? `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} · ${timer.mode==='focus'?'Enfoque':'Descanso'}` : 'Mi Día';
+}
+function startTimer() {
+  if(timer.running) return;
+  timer.running = true;
+  timer.interval = setInterval(() => {
+    timer.restante--;
+    if(timer.mode === 'focus') {
+      state.segundosEnfoque++;
+      if(timer.tareaId) { const t = state.tareas.find(x => x.id === timer.tareaId); if(t) t.segundos = (t.segundos||0)+1; }
+      if(timer.restante % 15 === 0) save();
+    }
+    if(timer.restante <= 0) { clearInterval(timer.interval); timer.running=false; timer.restante=0; paintTimer(); finishTimer(); return; }
+    paintTimer();
+  }, 1000);
+  paintTimer();
+}
+function pauseTimer() { timer.running=false; clearInterval(timer.interval); paintTimer(); save(); }
+function resetTimer() { clearInterval(timer.interval); timer.running=false; timer.restante=timer.total; paintTimer(); }
+function finishTimer() {
+  soundTimer(); haptic(60);
+  if(timer.mode === 'focus') { toast('¡Sesión completada! Descansa ☕','🎉'); timer.mode='breath'; timer.total=5*60; timer.restante=5*60; }
+  else { toast('Descanso terminado. ¿Otra ronda?','💪'); timer.mode='focus'; timer.total=25*60; timer.restante=25*60; }
+  paintTimer(); save();
+}
+function startFocus(id, min) {
+  const t = state.tareas.find(x => x.id === id);
+  if(!t) return;
+  timer.tareaId=id; timer.mode='focus'; timer.total=min*60; timer.restante=min*60;
+  clearInterval(timer.interval); timer.running=false;
+  switchView('focus'); startTimer();
+  toast(min===2?'Solo 2 minutos. Ya has empezado 💪':`Enfocándote: ${t.texto.slice(0,26)}${t.texto.length>26?'…':''}`, min===2?'🚀':'🎯');
+}
+$('#btnPlay').addEventListener('click', () => { if(timer.running) pauseTimer(); else startTimer(); haptic(10); });
+$('#btnReset').addEventListener('click', () => { resetTimer(); haptic(8); });
+$$('.preset').forEach(p => {
+  p.addEventListener('click', () => {
+    const min = parseInt(p.dataset.min,10);
+    $$('.preset').forEach(x => x.classList.remove('on'));
+    p.classList.add('on');
+    timer.mode='focus'; timer.total=min*60; timer.restante=min*60;
+    clearInterval(timer.interval); timer.running=false;
+    paintTimer(); haptic(8);
+  });
+});
+
+/* =====================================================
+   MODO CAOS
+   ===================================================== */
+function modoCaos() {
+  const pend = state.tareas.filter(t => !t.done);
+  const ov = $('#modalOverlay'), mc = $('#modalContent');
+  if(!pend.length) {
+    mc.innerHTML = `<span class="em">🎉</span><h2>¡Nada pendiente!</h2><p class="sub">Tu lista está limpia. Aprovecha para descansar o añade algo nuevo.</p><div class="modal-actions"><button class="btn primary" data-close>Cerrar</button></div>`;
+    ov.classList.add('show');
+    mc.querySelector('[data-close]').onclick = () => ov.classList.remove('show');
+    return;
+  }
+  const ordenadas = [...pend].sort((a,b) => {
+    const p = pesoP[a.prioridad] - pesoP[b.prioridad];
+    if(p) return p;
+    if(a.fecha !== b.fecha) return a.fecha < b.fecha ? -1 : 1;
+    return (a.est||999) - (b.est||999);
+  });
+  const el = ordenadas[0];
+  mc.innerHTML = `
+    <span class="em">🎯</span>
+    <h2>Olvida todo lo demás</h2>
+    <p class="sub">Solo hay una cosa que importa ahora:</p>
+    <div class="focus-task">${esc(el.texto)}</div>
+    <p class="sub">No pienses en terminarla. Solo empieza.<br><strong style="color:var(--blue)">2 minutos</strong>. Eso es todo.</p>
+    <div class="modal-actions">
+      <button class="btn primary" data-act="go">🚀 Empezar 2 minutos</button>
+      <button class="btn" data-act="other">🔄 Otra tarea</button>
+      <button class="btn ghost" data-close>Cerrar</button>
+    </div>`;
+  ov.classList.add('show');
+  mc.querySelector('[data-act="go"]').onclick = () => { ov.classList.remove('show'); startFocus(el.id, 2); };
+  mc.querySelector('[data-act="other"]').onclick = () => { el.prioridad = el.prioridad==='alta'?'media':'baja'; save(); modoCaos(); };
+  mc.querySelector('[data-close]').onclick = () => ov.classList.remove('show');
+}
+$('#btnCaos').addEventListener('click', () => { modoCaos(); haptic(10); });
+$('#modalOverlay').addEventListener('click', e => { if(e.target.id === 'modalOverlay') e.currentTarget.classList.remove('show'); });
+
+/* =====================================================
+   EXPORT / IMPORT / RESET
+   ===================================================== */
+function exportar() {
+  const blob = new Blob([JSON.stringify(state,null,2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `mi-dia-${todayStr()}.json`; a.click();
+  URL.revokeObjectURL(url);
+  toast('Datos exportados','⬇️');
+}
+function importar(file) {
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if(!data.tareas || !Array.isArray(data.tareas)) throw new Error('inválido');
+      state = { ...ESTADO_INICIAL, ...data };
+      save(); renderTasks(); toast('Datos importados','⬆️');
+    } catch(err) { toast('Archivo no válido','⚠️'); }
+  };
+  r.readAsText(file);
+}
+function resetTodo() {
+  if(!confirm('¿Borrar TODAS las tareas y estadísticas?\nNo se puede deshacer.')) return;
+  if(!confirm('Última confirmación: se perderá todo.')) return;
+  state = { ...ESTADO_INICIAL };
+  save(); renderTasks(); toast('Todo borrado. Empezamos de cero.','🧹');
+}
+$('#btnExport').addEventListener('click', exportar);
+$('#btnImport').addEventListener('click', () => $('#fileInput').click());
+$('#fileInput').addEventListener('change', e => { if(e.target.files[0]) importar(e.target.files[0]); e.target.value=''; });
+$('#btnReset').addEventListener('click', resetTodo);
+
+/* =====================================================
+   QUOTES / SETTINGS
+   ===================================================== */
+function nuevaFrase() {
+  const [t,a] = FRASES[Math.floor(Math.random()*FRASES.length)];
+  const fq = $('#statsQuote'), fqa = $('#statsQuoteAuthor');
+  if(fq) fq.textContent = '“' + t + '”';
+  if(fqa) fqa.textContent = '— ' + a;
+  const f2 = $('#focusQuote');
+  if(f2) {
+    const [t2,a2] = FRASES[Math.floor(Math.random()*FRASES.length)];
+    f2.textContent = '“' + t2 + '”';
+    f2.nextElementSibling.textContent = '— ' + a2;
+  }
+}
+$('#btnNewQuote').addEventListener('click', () => { nuevaFrase(); haptic(8); });
+
+$('#btnSettings').addEventListener('click', () => {
+  const nombre = prompt('¿Cómo te llamas?', state.nombre || '');
+  if(nombre !== null) { state.nombre = nombre.trim().slice(0,20); save(); tickClock(); toast(state.nombre?`Hola, ${state.nombre}`:'Nombre borrado','👋'); }
+  setTimeout(() => {
+    const ciudad = prompt('¿Ciudad para el clima?\n(vacío para GPS/detección automática)', state.ubicacion?.ciudad || '');
+    if(ciudad !== null) {
+      if(ciudad.trim()) buscarCiudadManual(ciudad.trim());
+      else { state.ubicacion = null; save(); cargarClima(true); }
+    }
+  }, 300);
+});
+
+/* =====================================================
+   KEYBOARD
+   ===================================================== */
+document.addEventListener('keydown', e => {
+  const writing = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName) || document.activeElement.isContentEditable;
+  if(writing) { if(e.key==='Escape'){ closeSheet(); document.activeElement.blur(); } return; }
+  if(e.key==='n'||e.key==='N'){ e.preventDefault(); openSheet(); }
+  if(e.key===' '){ e.preventDefault(); if(timer.running) pauseTimer(); else startTimer(); }
+  if(e.key==='Escape'){ $('#modalOverlay').classList.remove('show'); closeSheet(); }
+});
+window.addEventListener('beforeunload', save);
+
+/* =====================================================
+   INIT
+   ===================================================== */
+function init() {
+  tickClock();
+  nuevaFrase();
+  paintTimer();
+  $('#inputFecha').value = todayStr();
+  const dev = detectarDispositivo();
+  state.device = dev;
+  renderDeviceChips(dev);
+  save();
+  renderTasks();
+  cargarClima();
+  setInterval(() => cargarClima(), 10*60*1000);
+  setInterval(() => { if(state.ubicacion && (Date.now() - state.ubicacion.ts) > 30*60*1000) cargarClima(true); }, 30*60*1000);
+
+  const pend = state.tareas.filter(t => !t.done).length;
+  setTimeout(() => {
+    if(pend > 0) toast(`Tienes ${pend} tarea${pend>1?'s':''} pendiente${pend>1?'s':''}`, '📋');
+    else if(!state.tareas.length) toast('Pulsa el + para añadir tu primera tarea','👋');
+  }, 900);
+}
+init();
+</script>
+</body>
+</html>
