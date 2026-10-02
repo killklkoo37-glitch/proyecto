@@ -141,7 +141,7 @@ input:focus,select:focus,textarea:focus{outline:none}
   font-weight:600;color:var(--text2);display:inline-flex;align-items:center;gap:4px;
   transition:all 0.2s var(--spring);border:1px solid rgba(255,255,255,0.05)}
 .nc-btn:active{transform:scale(0.92)}
-.nc-btn.ai{color:var(--green);background:rgba(48,209,88,0.1)}
+.nc-btn.ai{color:var(--green);background:rgba(48,209,88,0.1);border-color:rgba(48,209,88,0.15)}
 .nc-btn.del{color:var(--red)}
 .nc-btn.speak{color:var(--blue);background:rgba(10,132,255,0.1)}
 .nc-btn.edit{color:var(--orange);background:rgba(255,159,10,0.1)}
@@ -195,20 +195,18 @@ input:focus,select:focus,textarea:focus{outline:none}
 .habit-del{margin-left:auto;color:var(--red);font-size:16px;padding:4px;cursor:pointer}
 
 .ia-usage{background:var(--card);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.07);
-  border-radius:var(--r);padding:14px 16px;margin-bottom:14px;animation:cardIn 0.35s var(--ease) both}
+  border-radius:var(--r);padding:12px 14px;margin-bottom:14px;animation:cardIn 0.35s var(--ease) both;
+  display:flex;align-items:center;gap:12px}
 .ia-usage.warning{border-color:rgba(255,159,10,0.35);background:rgba(255,159,10,0.08)}
-.ia-usage.danger{border-color:rgba(255,69,58,0.4);background:rgba(255,69,58,0.08);animation:dangerPulse 1.5s ease-in-out infinite}
-@keyframes dangerPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,69,58,0.3)}50%{box-shadow:0 0 0 6px rgba(255,69,58,0)}}
-.ia-usage-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ia-usage.danger{border-color:rgba(255,69,58,0.4);background:rgba(255,69,58,0.08)}
 .ia-usage-icon{font-size:22px;line-height:1;flex-shrink:0}
 .ia-usage-info{flex:1;min-width:0}
-.ia-usage-num{font-size:15px;font-weight:800;letter-spacing:-0.3px;line-height:1.2}
+.ia-usage-num{font-size:14px;font-weight:800;letter-spacing:-0.3px;line-height:1.2}
 .ia-usage-num .big{color:var(--green)}
 .ia-usage.warning .ia-usage-num .big{color:var(--orange)}
 .ia-usage.danger .ia-usage-num .big{color:var(--red)}
-.ia-usage-num .small{font-size:13px;color:var(--text2);font-weight:600}
-.ia-usage-sub{font-size:11px;color:var(--text3);margin-top:3px;font-weight:600}
-.ia-usage-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden}
+.ia-usage-num .small{font-size:12px;color:var(--text2);font-weight:600}
+.ia-usage-bar{height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin-top:6px}
 .ia-usage-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));
   border-radius:99px;transition:width 0.4s var(--ease),background 0.3s}
 .ia-usage.warning .ia-usage-fill{background:linear-gradient(90deg,var(--orange),var(--red))}
@@ -224,7 +222,6 @@ input:focus,select:focus,textarea:focus{outline:none}
 .fab.nota{background:linear-gradient(135deg,#0A84FF,#5E5CE6);font-size:20px}
 .fab.audio{background:linear-gradient(135deg,#FF9F0A,#FF6B00);font-size:20px}
 .fab.foto{background:linear-gradient(135deg,var(--purple),var(--pink));font-size:20px}
-.fab.ia{background:linear-gradient(135deg,var(--green),#00A86B);font-size:20px}
 .fab.mini{width:46px;height:46px;font-size:18px;opacity:0;pointer-events:none;transform:translateY(20px);
   transition:all 0.3s var(--spring)}
 .fab-group.open .fab.mini{opacity:1;pointer-events:auto;transform:translateY(0)}
@@ -235,8 +232,8 @@ input:focus,select:focus,textarea:focus{outline:none}
   backdrop-filter:blur(40px) saturate(180%);border-top:1px solid rgba(255,255,255,0.06);
   display:flex;gap:2px;z-index:30}
 .nav-item{flex:1;padding:7px 2px 5px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:2px;
-  color:var(--text3);transition:all 0.25s var(--ease);font-size:9.5px;font-weight:600;cursor:pointer}
-.nav-item .ni{font-size:19px;line-height:1;transition:transform 0.3s var(--spring)}
+  color:var(--text3);transition:all 0.25s var(--ease);font-size:10px;font-weight:600;cursor:pointer}
+.nav-item .ni{font-size:20px;line-height:1;transition:transform 0.3s var(--spring)}
 .nav-item:active .ni{transform:scale(0.85)}
 .nav-item.active{color:var(--blue)}
 .nav-item.active .ni{transform:scale(1.08)}
@@ -282,7 +279,6 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
   font-weight:700;color:var(--text2);border:1px solid rgba(255,255,255,0.05);
   transition:all 0.2s var(--spring);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
 .format-btn:active{transform:scale(0.9)}
-.format-btn:hover{background:rgba(255,255,255,0.1);color:#fff}
 .format-btn.formula{background:rgba(255,214,10,0.12);color:var(--yellow);border-color:rgba(255,214,10,0.2)}
 
 .preview-box{margin-top:10px;padding:14px;background:rgba(0,0,0,0.35);border-radius:12px;
@@ -313,21 +309,6 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
 .voice-bar:active{transform:scale(0.94)}
 .voice-bar .pulse{width:8px;height:8px;border-radius:50%;background:var(--green);animation:recPulse 1.2s infinite}
 
-.ia-chat{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
-.ia-msg{padding:14px 16px;border-radius:16px;font-size:14px;line-height:1.55;animation:cardIn 0.3s var(--ease) both}
-.ia-msg.user{background:rgba(10,132,255,0.15);border:1px solid rgba(10,132,255,0.25);align-self:flex-end;max-width:85%}
-.ia-msg.ai{background:var(--card);border:1px solid rgba(255,255,255,0.07);align-self:flex-start;max-width:95%}
-.ia-msg.ai h4{color:var(--green);font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.ia-msg.ai ul{margin-left:18px;margin-top:6px}
-.ia-msg.ai li{margin-bottom:4px;color:var(--text2)}
-.ia-msg.ai strong{color:#fff}
-.ia-msg .katex{color:#fff}
-.ia-msg .katex-display{overflow-x:auto;margin:8px 0}
-.ia-loading{display:flex;align-items:center;gap:10px;padding:14px;color:var(--text2);font-size:13.5px}
-.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);border-top-color:#fff;
-  border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
 .empty{text-align:center;padding:50px 22px;background:var(--card);border-radius:var(--r-lg);
   border:1px dashed rgba(255,255,255,0.1);animation:cardIn 0.4s var(--ease) both}
 .empty .em{font-size:46px;display:block;margin-bottom:12px;opacity:0.85}
@@ -356,8 +337,8 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
   .career-card .cc-icon{font-size:34px}
   .app{padding-left:14px;padding-right:14px}
   .day-dot{width:23px;height:23px;font-size:9px}
-  .nav-item{font-size:9px}
-  .nav-item .ni{font-size:17px}
+  .nav-item{font-size:9.5px}
+  .nav-item .ni{font-size:18px}
   .emoji-picker{grid-template-columns:repeat(6,1fr)}
 }
 </style>
@@ -383,18 +364,18 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
 <div class="login-screen" id="loginScreen">
   <div class="login-logo">📓</div>
   <div class="login-title">Cuaderno Virtual</div>
-  <div class="login-sub">Tu espacio de estudio con IA<br>Elige tu carrera e ingresa</div>
+  <div class="login-sub">Kevin & Juneia<br>Elige tu carrera e ingresa</div>
 
   <div class="career-grid">
     <div class="career-card" data-career="comunicacion">
       <span class="cc-icon">📡</span>
       <div class="cc-name">Comunicación Social</div>
-      <div class="cc-sub">UNS</div>
+      <div class="cc-sub">Juneia · UNS</div>
     </div>
     <div class="career-card" data-career="mecatronica">
       <span class="cc-icon">⚙️</span>
       <div class="cc-name">Mecatrónica Industrial</div>
-      <div class="cc-sub">SENATI</div>
+      <div class="cc-sub">Kevin · SENATI</div>
     </div>
   </div>
 
@@ -409,8 +390,8 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
     <div class="who">
       <div class="avatar" id="avatarIcon">📡</div>
       <div class="who-txt">
-        <div class="n" id="whoName">Comunicación Social</div>
-        <div class="c" id="whoCareer">Universidad Nacional del Santa</div>
+        <div class="n" id="whoName">Juneia</div>
+        <div class="c" id="whoCareer">Comunicación Social</div>
       </div>
     </div>
     <div class="header-btns">
@@ -433,30 +414,16 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
     <div class="notes-list" id="habitsList"></div>
   </main>
 
-  <main class="view" data-view="ia">
-    <div class="ia-usage" id="iaUsage">
-      <div class="ia-usage-top">
-        <div class="ia-usage-icon" id="iaUsageIcon">🔋</div>
-        <div class="ia-usage-info">
-          <div class="ia-usage-num" id="iaCounter">
-            <span class="big">500</span> <span class="small">/ 500 peticiones restantes hoy</span>
-          </div>
-          <div class="ia-usage-sub" id="iaUsageSub">Se renuevan a medianoche · Por carrera</div>
-        </div>
-      </div>
-      <div class="ia-usage-bar"><div class="ia-usage-fill" id="iaUsageFill" style="width:100%"></div></div>
-    </div>
-
-    <div class="ia-chat" id="iaChat"></div>
-    <div style="display:flex;gap:8px;margin-top:12px">
-      <input type="text" class="sheet-input" id="iaInput" placeholder="Pregúntale algo a la IA…"
-        style="margin:0;flex:1" autocomplete="off">
-      <button class="btn primary" id="iaSend" style="padding:14px 18px">→</button>
-    </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px" id="iaSuggestions"></div>
-  </main>
-
   <main class="view" data-view="stats">
+    <div class="ia-usage" id="iaUsage">
+      <div class="ia-usage-icon" id="iaUsageIcon">🔋</div>
+      <div class="ia-usage-info">
+        <div class="ia-usage-num" id="iaCounter">
+          <span class="big">500</span> <span class="small">peticiones IA restantes hoy</span>
+        </div>
+        <div class="ia-usage-bar"><div class="ia-usage-fill" id="iaUsageFill" style="width:100%"></div></div>
+      </div>
+    </div>
     <div class="stats-grid" id="statsGrid"></div>
     <div class="empty" style="margin-top:16px">
       <span class="em">📊</span>
@@ -468,7 +435,6 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
 
 <!-- FAB GROUP -->
 <div class="fab-group" id="fabGroup">
-  <button class="fab mini ia" id="fabIA" title="Preguntar a IA">🤖</button>
   <button class="fab mini foto" id="fabFoto" title="Tomar foto">📷</button>
   <button class="fab mini audio" id="fabAudio" title="Grabar audio">🎙️</button>
   <button class="fab mini" id="fabTarea" title="Nueva tarea"
@@ -486,7 +452,6 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
   <button class="nav-item active" data-view="notas"><span class="ni">📓</span><span>Cuaderno</span></button>
   <button class="nav-item" data-view="tareas"><span class="ni">✅</span><span>Tareas</span></button>
   <button class="nav-item" data-view="habitos"><span class="ni">🌱</span><span>Hábitos</span></button>
-  <button class="nav-item" data-view="ia"><span class="ni">🤖</span><span>IA</span></button>
   <button class="nav-item" data-view="stats"><span class="ni">📊</span><span>Stats</span></button>
 </nav>
 
@@ -588,6 +553,7 @@ const CARRERAS = {
     icono: '📡',
     password: '123',
     genero: 'femenino',
+    usuario: 'Juneia',
     cursos: [
       { id: 'periodismo', nombre: 'Periodismo', icono: '📰' },
       { id: 'audiovisual', nombre: 'Producción Audiovisual', icono: '🎬' },
@@ -607,6 +573,7 @@ const CARRERAS = {
     icono: '⚙️',
     password: '2008',
     genero: 'masculino',
+    usuario: 'Kevin',
     cursos: [
       { id: 'diseno', nombre: 'Diseño Mecatrónico', icono: '📐' },
       { id: 'automatizacion', nombre: 'Automatización Industrial', icono: '🏭' },
@@ -634,7 +601,6 @@ const ESTADO_INICIAL = {
   notas: [],
   tareas: [],
   habitos: [],
-  iaHistory: [],
   aiUsage: {},
   cursosPersonalizados: {},
   sesion: null
@@ -720,7 +686,7 @@ function aplicarKaTeX(elemento){
 }
 
 /* =====================================================
-   VOZ
+   VOZ (TTS)
    ===================================================== */
 let voiceEnabled = localStorage.getItem(VOICE_KEY) !== 'off';
 let spanishVoice = null;
@@ -826,17 +792,10 @@ function limpiarUsoAntiguo(){
 }
 function actualizarContadorIA(){
   const restantes = getRestantesHoy();
-  const usados = LIMITE_DIARIO_IA - restantes;
   const pct = (restantes / LIMITE_DIARIO_IA) * 100;
   const el = $('#iaCounter');
   if(!el) return;
-  el.innerHTML = `<span class="big">${restantes}</span> <span class="small">/ ${LIMITE_DIARIO_IA} restantes hoy</span>`;
-  const sub = $('#iaUsageSub');
-  if(sub){
-    if(restantes === 0) sub.textContent = '⚠️ Límite alcanzado · Se renueva a medianoche';
-    else if(restantes < 50) sub.textContent = `Quedan pocas · Usadas hoy: ${usados}`;
-    else sub.textContent = `Usadas hoy: ${usados} · Se renuevan a medianoche`;
-  }
+  el.innerHTML = `<span class="big">${restantes}</span> <span class="small">peticiones IA restantes hoy</span>`;
   const card = $('#iaUsage');
   if(card){
     card.classList.toggle('warning', restantes > 0 && restantes < 100);
@@ -987,17 +946,16 @@ function entrarApp(){
   $('#app').classList.add('active');
   $('#nav').style.display = 'flex';
   $('#avatarIcon').textContent = carrera.icono;
-  $('#whoName').textContent = carrera.nombre;
-  $('#whoCareer').textContent = carrera.universidad;
+  $('#whoName').textContent = carrera.usuario;
+  $('#whoCareer').textContent = carrera.nombre;
   actualizarBotonVoz(); actualizarContadorIA();
-  renderCursos(); renderNotas(); renderTareas(); renderHabitos();
-  renderStats(); renderIAHistory(); renderIASuggestions();
+  renderCursos(); renderNotas(); renderTareas(); renderHabitos(); renderStats();
 
   setTimeout(() => {
     if(voiceEnabled) leerResumenDia(true);
     else {
       const saludo = carrera.genero === 'femenino' ? 'Bienvenida' : 'Bienvenido';
-      toast(`${saludo} a ${carrera.nombre}`, carrera.icono);
+      toast(`${saludo}, ${carrera.usuario}`, carrera.icono);
     }
   }, 800);
 }
@@ -1015,7 +973,7 @@ $('#btnLogout').addEventListener('click', () => {
 });
 
 /* =====================================================
-   RESUMEN DE VOZ (con género correcto)
+   RESUMEN DE VOZ PERSONALIZADO
    ===================================================== */
 function generarResumenDia(incluirSaludo = true){
   const c = CARRERAS[state.carrera];
@@ -1034,8 +992,12 @@ function generarResumenDia(incluirSaludo = true){
   else saludo = '¡Buenas noches!';
 
   const partes = [];
-  if(incluirSaludo) partes.push(`${saludo} ${bienvenidaTxt} a tu cuaderno de ${c.nombre}.`);
+  if(incluirSaludo){
+    partes.push(`${saludo} ${c.usuario}.`);
+    partes.push(`${bienvenidaTxt} a tu cuaderno de ${c.nombre}.`);
+  }
 
+  // Hábitos
   if(habitos.length === 0){
     partes.push('Todavía no tienes hábitos configurados.');
   } else if(habitosPendientes.length === 0){
@@ -1044,9 +1006,10 @@ function generarResumenDia(incluirSaludo = true){
     const nombres = habitosPendientes.map(h => h.nombre);
     if(nombres.length === 1) partes.push(`Te falta un hábito para hoy: ${nombres[0]}.`);
     else if(nombres.length <= 3) partes.push(`Te faltan ${nombres.length} hábitos para hoy: ${nombres.slice(0,-1).join(', ')} y ${nombres[nombres.length-1]}.`);
-    else partes.push(`Te faltan ${nombres.length} hábitos para hoy.`);
+    else partes.push(`Te faltan ${nombres.length} hábitos para hoy. Los primeros son: ${nombres.slice(0,3).join(', ')}, y otros más.`);
   }
 
+  // Tareas
   if(tareas.length === 0){
     partes.push('No tienes tareas registradas.');
   } else if(tareasPendientes.length === 0){
@@ -1054,17 +1017,30 @@ function generarResumenDia(incluirSaludo = true){
   } else {
     const n = tareasPendientes.length;
     if(n === 1) partes.push(`Tienes una tarea pendiente: ${tareasPendientes[0].titulo}.`);
-    else partes.push(`Tienes ${n} tareas pendientes.`);
+    else if(n <= 3){
+      const nombres = tareasPendientes.map(t => t.titulo);
+      partes.push(`Tienes ${n} tareas pendientes: ${nombres.slice(0,-1).join(', ')} y ${nombres[nombres.length-1]}.`);
+    } else {
+      const urgentes = tareasPendientes.filter(t => t.prioridad === 'alta');
+      if(urgentes.length > 0) partes.push(`Tienes ${n} tareas pendientes. Las más urgentes: ${urgentes.slice(0,2).map(t => t.titulo).join(', ')}.`);
+      else partes.push(`Tienes ${n} tareas pendientes.`);
+    }
   }
 
+  // Aviso IA
   const restantes = getRestantesHoy();
   if(restantes === 0) partes.push('Aviso: se agotaron tus peticiones de inteligencia artificial por hoy.');
   else if(restantes < 30) partes.push(`Aviso: te quedan ${restantes} peticiones de inteligencia artificial para hoy.`);
 
-  const frases = ['¡A darle con todo!','¡Tú puedes!','Un paso a la vez.','¡Vamos con energía!','El progreso es progreso.'];
+  // Ánimo personalizado
+  const frasesFem = ['¡A darle con todo, campeona!','¡Tú puedes, Junelia!','Un paso a la vez.','¡Vamos con energía!','El progreso es progreso.'];
+  const frasesMasc = ['¡A darle con todo, campeón!','¡Tú puedes, Kevin!','Un paso a la vez.','¡Vamos con energía!','El progreso es progreso.'];
+  const frases = esFem ? frasesFem : frasesMasc;
   partes.push(frases[Math.floor(Math.random()*frases.length)]);
+
   return partes.join(' ');
 }
+
 function leerResumenDia(incluirSaludo = true){
   if(!voiceEnabled){ toast('Activa la voz primero','🔇'); return; }
   speak(generarResumenDia(incluirSaludo));
@@ -1086,7 +1062,7 @@ function renderNotas(){
   const list = $('#notesList');
   const notas = notasDelCurso();
   if(!notas.length){
-    list.innerHTML = `<div class="empty"><span class="em">📝</span><h3>Sin apuntes aún</h3><p>Pulsa el botón <strong>+</strong> y luego el icono <strong>📝</strong> para añadir una nota</p></div>`;
+    list.innerHTML = `<div class="empty"><span class="em">📝</span><h3>Sin apuntes aún</h3><p>Pulsa el botón <strong>+</strong> y luego <strong>📝</strong> para añadir una nota</p></div>`;
     return;
   }
   list.innerHTML = notas.map(n => noteHTML(n)).join('');
@@ -1123,9 +1099,9 @@ function noteHTML(n){
       ${n.texto ? `<div class="nc-body ${bodyClass}">${bodyHTML}</div>` : ''}
       <div class="nc-actions">
         <button type="button" class="nc-btn speak" data-act="speak">🔊 Leer</button>
-        <button type="button" class="nc-btn edit" data-act="edit">✏️ Editar</button>
+        ${(n.tipo === 'texto' || n.tipo === 'formula' || n.tipo === 'ia') ? `<button type="button" class="nc-btn edit" data-act="edit">✏️ Editar</button>` : ''}
         ${n.texto && n.texto.length > 200 ? `<button type="button" class="nc-btn" data-act="expand">Ver más</button>` : ''}
-        ${n.tipo !== 'ia' ? `<button type="button" class="nc-btn ai" data-act="ia">🤖 Resumir</button>` : ''}
+        ${n.tipo !== 'ia' ? `<button type="button" class="nc-btn ai" data-act="ia">🤖 Resumir y leer</button>` : ''}
         <button type="button" class="nc-btn del" data-act="del">🗑️</button>
       </div>
     </div>`;
@@ -1232,7 +1208,7 @@ $('#sheetSave').addEventListener('click', () => {
 });
 
 /* =====================================================
-   TOOLBAR DE FORMATO
+   TOOLBAR
    ===================================================== */
 $$('.format-btn[data-fmt]').forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -1472,12 +1448,7 @@ $('#fabMain').addEventListener('click', () => {
   $('#fabGroup').classList.toggle('open', fabOpen);
   haptic(8);
 });
-
-$('#fabNota').addEventListener('click', () => {
-  fabOpen = false; $('#fabGroup').classList.remove('open');
-  openSheet();
-});
-$('#fabIA').addEventListener('click', () => { fabOpen = false; $('#fabGroup').classList.remove('open'); switchView('ia'); });
+$('#fabNota').addEventListener('click', () => { fabOpen = false; $('#fabGroup').classList.remove('open'); openSheet(); });
 $('#fabAudio').addEventListener('click', () => { fabOpen = false; $('#fabGroup').classList.remove('open'); toggleRecording(); });
 $('#fabFoto').addEventListener('click', () => { fabOpen = false; $('#fabGroup').classList.remove('open'); tomarFoto(); });
 $('#fabTarea').addEventListener('click', () => { fabOpen = false; $('#fabGroup').classList.remove('open'); openTaskSheet(); });
@@ -1485,7 +1456,7 @@ $('#fabHabito').addEventListener('click', () => { fabOpen = false; $('#fabGroup'
 $('#fabCurso').addEventListener('click', () => { fabOpen = false; $('#fabGroup').classList.remove('open'); openCourseSheet(); });
 
 /* =====================================================
-   AUDIO
+   AUDIO — Graba, transcribe y LEE la transcripción
    ===================================================== */
 let mediaRecorder = null, audioChunks = [], recStartTime = null, recInterval = null, recStream = null;
 
@@ -1531,13 +1502,17 @@ async function procesarAudio(){
     state.notas.push(nota);
     save(); renderNotas(); renderStats();
     if(getRestantesHoy() === 0){ toast('Audio guardado. Límite IA alcanzado.','🪫'); return; }
-    toast('Audio guardado. Transcribiendo…','🎙️');
+    toast('Transcribiendo audio…','🎙️');
     try{
       const texto = await transcribirAudio(base64);
       if(texto){
         nota.texto = '📝 Transcripción:\n' + texto;
         save(); renderNotas();
         toast('Audio transcrito ✅','🤖');
+        // LEE la transcripción
+        if(voiceEnabled){
+          speak('Transcripción lista. ' + texto.slice(0, 600));
+        }
       }
     }catch(e){
       if(e.message.includes('Límite')) toast(e.message, '🪫');
@@ -1555,7 +1530,7 @@ async function transcribirAudio(base64){
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEY },
     body: JSON.stringify({
       contents: [{ parts: [
-        { text: 'Transcribe este audio en español. Devuelve SOLO la transcripción.' },
+        { text: 'Transcribe este audio en español. Devuelve SOLO la transcripción, sin comentarios adicionales.' },
         { inline_data: { mime_type: mimeType, data: base64Data } }
       ]}]
     })
@@ -1566,7 +1541,7 @@ async function transcribirAudio(base64){
 }
 
 /* =====================================================
-   FOTO
+   FOTO — Analiza y LEE el análisis
    ===================================================== */
 function tomarFoto(){
   const input = document.createElement('input');
@@ -1584,13 +1559,17 @@ function tomarFoto(){
       state.notas.push(nota);
       save(); renderNotas(); renderStats();
       if(getRestantesHoy() === 0){ toast('Foto guardada. Límite IA alcanzado.','🪫'); return; }
-      toast('Foto guardada. Analizando…','📷');
+      toast('Analizando foto…','📷');
       try{
         const texto = await analizarImagen(compressed);
         if(texto){
           nota.texto = '🔍 Análisis IA:\n' + texto;
           save(); renderNotas();
           toast('Foto analizada ✅','🤖');
+          // LEE el análisis
+          if(voiceEnabled){
+            speak('Análisis de la imagen. ' + texto.slice(0, 600));
+          }
         }
       }catch(e){
         if(e.message.includes('Límite')) toast(e.message, '🪫');
@@ -1627,7 +1606,7 @@ async function analizarImagen(base64){
     headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEY },
     body: JSON.stringify({
       contents: [{ parts: [
-        { text: 'Analiza esta imagen como apunte de clase. Extrae el texto y organiza puntos clave en español. Si hay fórmulas, escríbelas en LaTeX entre $...$' },
+        { text: 'Analiza esta imagen como apunte de clase o pizarra. Extrae todo el texto visible y organiza los puntos clave en español. Si hay fórmulas, escríbelas en LaTeX entre $...$.' },
         { inline_data: { mime_type: mimeType, data: base64Data } }
       ]}]
     })
@@ -1638,7 +1617,7 @@ async function analizarImagen(base64){
 }
 
 /* =====================================================
-   IA
+   IA — Resumir con IA Y HABLAR
    ===================================================== */
 async function llamarIA(prompt, intentos = 3){
   consumirPeticionIA();
@@ -1680,16 +1659,36 @@ async function resumirConIA(notaId){
   const contenido = nota.texto || nota.titulo;
   if(!contenido){ toast('No hay texto','⚠️'); return; }
   if(getRestantesHoy() === 0){ toast('Límite IA alcanzado.','🪫'); return; }
-  toast('Resumiendo con IA…','🤖');
+
+  toast('IA resumiendo…','🤖');
+
   try{
-    const resumen = await llamarIA(`Resume estos apuntes de "${CARRERAS[state.carrera].nombre}" curso "${nombreCurso(nota.curso)}". Estructura: 1) Ideas principales 2) Puntos clave 3) Posibles preguntas. Usa LaTeX entre $...$ para fórmulas.\n\n${contenido}`);
+    const genero = CARRERAS[state.carrera].genero === 'femenino' ? 'una estudiante mujer' : 'un estudiante hombre';
+    const resumen = await llamarIA(
+      `Eres un asistente de estudio para ${genero} de "${CARRERAS[state.carrera].nombre}" (curso: "${nombreCurso(nota.curso)}"). ` +
+      `Resume estos apuntes de forma clara y organizada para leerlos en voz alta. ` +
+      `Estructura: 1) Ideas principales. 2) Puntos clave. 3) Posibles preguntas de examen. ` +
+      `Sé conciso y natural para lectura hablada. Usa LaTeX entre $...$ para fórmulas.\n\n` +
+      `APUNTES:\n${contenido}`
+    );
+
+    // Guarda el resumen como nota IA
     state.notas.push({
       id: uid(), carrera: state.carrera, curso: nota.curso, tipo: 'ia',
       titulo: 'Resumen IA — ' + (nota.titulo || 'nota'),
       texto: resumen, ts: Date.now()
     });
     save(); renderNotas(); renderStats();
-    toast('Resumen generado ✅','🤖');
+    toast('Resumen listo ✅','🤖'); haptic(20);
+
+    // 🔥 LA IA LO HABLA
+    if(voiceEnabled){
+      setTimeout(() => {
+        speak('Resumen listo. ' + resumen);
+      }, 400);
+    } else {
+      toast('Activa la voz para escucharlo','🔇');
+    }
   }catch(e){
     if(e.message.includes('Límite')) toast(e.message, '🪫');
     else toast('Error IA: ' + e.message.slice(0,50), '⚠️');
@@ -1699,98 +1698,6 @@ async function resumirConIA(notaId){
 function nombreCurso(id){
   return getCursosCarrera().find(c => c.id === id)?.nombre || id;
 }
-
-function renderIAHistory(){
-  const chat = $('#iaChat');
-  if(!state.iaHistory.length){
-    const esFem = CARRERAS[state.carrera].genero === 'femenino';
-    const bienvenida = esFem ? 'Bienvenida' : 'Bienvenido';
-    chat.innerHTML = `<div class="ia-msg ai"><h4>🤖 Asistente</h4>
-      <p>${bienvenida}. Soy tu asistente para <strong>${esc(CARRERAS[state.carrera].nombre)}</strong>.</p>
-      <p style="margin-top:8px">Puedo ayudarte a:</p>
-      <ul>
-        <li>Explicar conceptos de tus cursos</li>
-        <li>Resumir apuntes</li>
-        <li>Resolver fórmulas y ecuaciones</li>
-        <li>Generar preguntas de examen</li>
-      </ul>
-      <p style="margin-top:8px;color:var(--text2);font-size:12px">🔒 Límite: 500 peticiones por día</p>
-    </div>`;
-    return;
-  }
-  chat.innerHTML = state.iaHistory.slice(-20).map(m => {
-    if(m.role === 'user') return `<div class="ia-msg user">${esc(m.text)}</div>`;
-    return `<div class="ia-msg ai"><h4>🤖 Asistente</h4>${formatIA(m.text)}</div>`;
-  }).join('');
-  chat.querySelectorAll('.ia-msg.ai').forEach(el => aplicarKaTeX(el));
-  chat.scrollTop = chat.scrollHeight;
-}
-
-function formatIA(text){
-  let html = esc(text);
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/^### (.+)$/gm, '<strong style="color:var(--blue);font-size:15px;display:block;margin-top:8px">$1</strong>');
-  html = html.replace(/^## (.+)$/gm, '<strong style="color:var(--blue);font-size:16px;display:block;margin-top:10px">$1</strong>');
-  html = html.replace(/^\* (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-  html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-  html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-  html = html.replace(/`([^`\n]+)`/g, '<code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:6px;font-family:ui-monospace,monospace;font-size:12.5px;color:var(--teal)">$1</code>');
-  html = html.replace(/\n/g, '<br>');
-  return html;
-}
-
-function renderIASuggestions(){
-  const sugs = state.carrera === 'comunicacion'
-    ? ['¿Cómo se estructura una noticia?','Teoría de la agenda-setting','Diferencia entre RRPP y publicidad','Ideas para un guion audiovisual']
-    : ['¿Cómo funciona un PLC?','Tipos de sensores industriales','Explícame la ley de Ohm','Qué es Industria 4.0'];
-  $('#iaSuggestions').innerHTML = sugs.map(s =>
-    `<button type="button" class="nc-btn" style="padding:8px 14px;font-size:12px" onclick="preguntarIA('${esc(s)}')">${esc(s)}</button>`
-  ).join('');
-}
-
-window.preguntarIA = async (pregunta) => {
-  if(!pregunta || !pregunta.trim()) return;
-  if(getRestantesHoy() === 0){
-    toast('Límite diario IA alcanzado. Se renueva a medianoche.','🪫');
-    haptic(30); return;
-  }
-  const q = pregunta.trim();
-  $('#iaInput').value = '';
-  state.iaHistory.push({ role:'user', text:q });
-  save(); renderIAHistory();
-
-  const chat = $('#iaChat');
-  const loader = document.createElement('div');
-  loader.className = 'ia-msg ai';
-  loader.innerHTML = `<div class="ia-loading"><div class="spinner"></div> Pensando…</div>`;
-  chat.appendChild(loader);
-  chat.scrollTop = chat.scrollHeight;
-
-  try{
-    const esFem = CARRERAS[state.carrera].genero === 'femenino';
-    const genero = esFem ? 'una estudiante mujer' : 'un estudiante hombre';
-    const ctx = `Eres asistente de estudio para ${genero} de "${CARRERAS[state.carrera].nombre}" en ${CARRERAS[state.carrera].universidad}. Curso: ${nombreCurso(cursoActual)}. Responde en español con ejemplos. Usa LaTeX entre $...$ para fórmulas matemáticas. Dirígete a la persona en el género correcto.`;
-    const respuesta = await llamarIA(ctx + '\n\nPREGUNTA: ' + q);
-    state.iaHistory.push({ role:'ai', text:respuesta });
-    save();
-    if(voiceEnabled){
-      const lectura = respuesta.replace(/[#*_`]/g, '').slice(0, 300);
-      speak(lectura);
-    }
-  }catch(e){
-    state.iaHistory.push({ role:'ai', text:'⚠️ ' + e.message });
-    save();
-    if(e.message.includes('Límite')) toast(e.message, '🪫');
-  }
-  renderIAHistory();
-};
-
-$('#iaSend').addEventListener('click', () => {
-  const q = $('#iaInput').value.trim();
-  if(q) window.preguntarIA(q);
-});
-$('#iaInput').addEventListener('keydown', e => { if(e.key === 'Enter') $('#iaSend').click(); });
 
 /* =====================================================
    STATS
@@ -1817,7 +1724,7 @@ function renderStats(){
     <div class="stat-card"><span class="sc-icon">⏳</span><div class="sc-val" style="color:var(--orange)">${tareasPend}</div><div class="sc-lbl">Tareas pendientes</div></div>
     <div class="stat-card"><span class="sc-icon">🌱</span><div class="sc-val" style="color:var(--green)">${habHoy}/${habitos.length}</div><div class="sc-lbl">Hábitos hoy</div></div>
     <div class="stat-card"><span class="sc-icon">🔥</span><div class="sc-val" style="color:var(--orange)">${mejorRacha}</div><div class="sc-lbl">Mejor racha</div></div>
-    <div class="stat-card"><span class="sc-icon">🔋</span><div class="sc-val" style="color:${restantesIA === 0 ? 'var(--red)' : restantesIA < 100 ? 'var(--orange)' : 'var(--green)'}">${restantesIA}</div><div class="sc-lbl">Peticiones IA hoy</div></div>
+    <div class="stat-card"><span class="sc-icon">🔋</span><div class="sc-val" style="color:${restantesIA === 0 ? 'var(--red)' : restantesIA < 100 ? 'var(--orange)' : 'var(--green)'}">${restantesIA}</div><div class="sc-lbl">IA restantes</div></div>
     <div class="stat-card"><span class="sc-icon">🤖</span><div class="sc-val" style="color:var(--green)">${notas.filter(n=>n.tipo==='ia').length}</div><div class="sc-lbl">Resúmenes IA</div></div>
   `;
   $('#statsSub').textContent = notas.length || habitos.length || tareas.length
@@ -1832,7 +1739,7 @@ function switchView(name){
   $$('.view').forEach(v => v.classList.toggle('active', v.dataset.view === name));
   $$('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view === name));
   haptic(6);
-  if(name === 'ia') actualizarContadorIA();
+  if(name === 'stats') actualizarContadorIA();
 }
 $$('.nav-item').forEach(n => n.addEventListener('click', () => switchView(n.dataset.view)));
 
