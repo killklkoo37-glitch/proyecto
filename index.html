@@ -419,7 +419,7 @@ textarea.sheet-input{min-height:180px;line-height:1.6;font-family:ui-monospace,'
       <div class="ia-usage-icon" id="iaUsageIcon">🔋</div>
       <div class="ia-usage-info">
         <div class="ia-usage-num" id="iaCounter">
-          <span class="big">500</span> <span class="small">peticiones IA restantes hoy</span>
+          <span class="big">1500</span> <span class="small">peticiones IA restantes hoy</span>
         </div>
         <div class="ia-usage-bar"><div class="ia-usage-fill" id="iaUsageFill" style="width:100%"></div></div>
       </div>
@@ -541,10 +541,17 @@ Ejemplos:
    ===================================================== */
 const LS_KEY = 'cuaderno_virtual_v7';
 const VOICE_KEY = 'cuaderno_voz_on';
-const GEMINI_KEY = 'AQ.Ab8RN6L_iWJ7Pzqkfpum6BVjv-tGjaSMXEdh-cCdXhfAq8Ogjg';
+
+// 3 API keys (proyectos distintos = cuotas separadas). Rotación automática.
+const GEMINI_KEYS = [
+  'AQ.Ab8RN6JEsKVsxqybLXTG9JS5p7aEA6szFcUvvcAzWy8D7PSbmg',
+  'AQ.Ab8RN6IZXo6ACOPukUvAA12fVHh75hea-hhWn_zGI0KN4xsnJA',
+  'AQ.Ab8RN6LD2yzMfjO72JuUfOc-A16RzjLRHqElBXln2zycnfMKbg'
+];
 const GEMINI_MODEL = 'gemini-3.6-flash';
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent';
-const LIMITE_DIARIO_IA = 500;
+const LIMITE_DIARIO_IA = 500 * GEMINI_KEYS.length; // contador visual (el límite real lo pone Google por proyecto)
+const KEYS_STATE = 'cuaderno_keys_state';
 
 const CARRERAS = {
   comunicacion: {
@@ -643,6 +650,42 @@ function toast(msg, emoji='✅'){
   el.innerHTML = `<span>${emoji}</span><span>${esc(msg)}</span>`;
   $('#toasts').appendChild(el);
   setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),300); }, 3000);
+}
+
+/* =====================================================
+   GEMINI: ROTACIÓN AUTOMÁTICA DE API KEYS
+   ===================================================== */
+function keysState(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEYS_STATE) || '{}');
+    if(s.dia !== todayStr()) return { dia: todayStr(), bloqueo: {}, idx: 0 };
+    return { dia: s.dia, bloqueo: s.bloqueo || {}, idx: s.idx || 0 };
+  }catch(e){ return { dia: todayStr(), bloqueo: {}, idx: 0 }; }
+}
+function saveKeysState(s){ try{ localStorage.setItem(KEYS_STATE, JSON.stringify(s)); }catch(e){} }
+
+async function geminiFetch(payload){
+  const s = keysState();
+  const ahora = Date.now();
+  let lastRes = null;
+  for(let n = 0; n < GEMINI_KEYS.length; n++){
+    const i = (s.idx + n) % GEMINI_KEYS.length;
+    if((s.bloqueo[i] || 0) > ahora) continue; // key en pausa
+    let res;
+    try{
+      res = await fetch(GEMINI_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEYS[i] },
+        body: JSON.stringify(payload)
+      });
+    }catch(e){ continue; }
+    if(res.ok){ s.idx = i; saveKeysState(s); return res; }
+    lastRes = res;
+    if(res.status === 429){ s.bloqueo[i] = ahora + 90*1000; saveKeysState(s); continue; }               // límite por minuto
+    if(res.status === 403 || res.status === 401){ s.bloqueo[i] = ahora + 6*3600*1000; saveKeysState(s); continue; } // key inválida o agotada
+    return res;
+  }
+  return lastRes || new Response(null, { status: 429 });
 }
 
 /* =====================================================
@@ -798,7 +841,7 @@ function actualizarContadorIA(){
   el.innerHTML = `<span class="big">${restantes}</span> <span class="small">peticiones IA restantes hoy</span>`;
   const card = $('#iaUsage');
   if(card){
-    card.classList.toggle('warning', restantes > 0 && restantes < 100);
+    card.classList.toggle('warning', restantes > 0 && restantes < LIMITE_DIARIO_IA * 0.2);
     card.classList.toggle('danger', restantes === 0);
   }
   const icon = $('#iaUsageIcon');
@@ -1033,7 +1076,7 @@ function generarResumenDia(incluirSaludo = true){
   else if(restantes < 30) partes.push(`Aviso: te quedan ${restantes} peticiones de inteligencia artificial para hoy.`);
 
   // Ánimo personalizado
-  const frasesFem = ['¡A darle con todo, campeona!','¡Tú puedes, Junelia!','Un paso a la vez.','¡Vamos con energía!','El progreso es progreso.'];
+  const frasesFem = ['¡A darle con todo, campeona!','¡Tú puedes, Juneia!','Un paso a la vez.','¡Vamos con energía!','El progreso es progreso.'];
   const frasesMasc = ['¡A darle con todo, campeón!','¡Tú puedes, Kevin!','Un paso a la vez.','¡Vamos con energía!','El progreso es progreso.'];
   const frases = esFem ? frasesFem : frasesMasc;
   partes.push(frases[Math.floor(Math.random()*frases.length)]);
@@ -1509,7 +1552,6 @@ async function procesarAudio(){
         nota.texto = '📝 Transcripción:\n' + texto;
         save(); renderNotas();
         toast('Audio transcrito ✅','🤖');
-        // LEE la transcripción
         if(voiceEnabled){
           speak('Transcripción lista. ' + texto.slice(0, 600));
         }
@@ -1525,15 +1567,11 @@ async function transcribirAudio(base64){
   consumirPeticionIA();
   const base64Data = base64.split(',')[1];
   const mimeType = base64.match(/data:([^;]+)/)?.[1] || 'audio/webm';
-  const res = await fetch(GEMINI_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEY },
-    body: JSON.stringify({
-      contents: [{ parts: [
-        { text: 'Transcribe este audio en español. Devuelve SOLO la transcripción, sin comentarios adicionales.' },
-        { inline_data: { mime_type: mimeType, data: base64Data } }
-      ]}]
-    })
+  const res = await geminiFetch({
+    contents: [{ parts: [
+      { text: 'Transcribe este audio en español. Devuelve SOLO la transcripción, sin comentarios adicionales.' },
+      { inline_data: { mime_type: mimeType, data: base64Data } }
+    ]}]
   });
   if(!res.ok) throw new Error('HTTP ' + res.status);
   const j = await res.json();
@@ -1566,7 +1604,6 @@ function tomarFoto(){
           nota.texto = '🔍 Análisis IA:\n' + texto;
           save(); renderNotas();
           toast('Foto analizada ✅','🤖');
-          // LEE el análisis
           if(voiceEnabled){
             speak('Análisis de la imagen. ' + texto.slice(0, 600));
           }
@@ -1601,15 +1638,11 @@ async function analizarImagen(base64){
   consumirPeticionIA();
   const base64Data = base64.split(',')[1];
   const mimeType = base64.match(/data:([^;]+)/)?.[1] || 'image/jpeg';
-  const res = await fetch(GEMINI_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEY },
-    body: JSON.stringify({
-      contents: [{ parts: [
-        { text: 'Analiza esta imagen como apunte de clase o pizarra. Extrae todo el texto visible y organiza los puntos clave en español. Si hay fórmulas, escríbelas en LaTeX entre $...$.' },
-        { inline_data: { mime_type: mimeType, data: base64Data } }
-      ]}]
-    })
+  const res = await geminiFetch({
+    contents: [{ parts: [
+      { text: 'Analiza esta imagen como apunte de clase o pizarra. Extrae todo el texto visible y organiza los puntos clave en español. Si hay fórmulas, escríbelas en LaTeX entre $...$.' },
+      { inline_data: { mime_type: mimeType, data: base64Data } }
+    ]}]
   });
   if(!res.ok) throw new Error('HTTP ' + res.status);
   const j = await res.json();
@@ -1624,13 +1657,9 @@ async function llamarIA(prompt, intentos = 3){
   let lastError = null;
   for(let i = 0; i < intentos; i++){
     try{
-      const res = await fetch(GEMINI_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_KEY },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 1500 }
-        })
+      const res = await geminiFetch({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.7, maxOutputTokens: 1500 }
       });
       if(res.status === 429){
         await new Promise(r => setTimeout(r, (i+1) * 2000));
@@ -1672,7 +1701,6 @@ async function resumirConIA(notaId){
       `APUNTES:\n${contenido}`
     );
 
-    // Guarda el resumen como nota IA
     state.notas.push({
       id: uid(), carrera: state.carrera, curso: nota.curso, tipo: 'ia',
       titulo: 'Resumen IA — ' + (nota.titulo || 'nota'),
@@ -1681,7 +1709,6 @@ async function resumirConIA(notaId){
     save(); renderNotas(); renderStats();
     toast('Resumen listo ✅','🤖'); haptic(20);
 
-    // 🔥 LA IA LO HABLA
     if(voiceEnabled){
       setTimeout(() => {
         speak('Resumen listo. ' + resumen);
@@ -1724,7 +1751,7 @@ function renderStats(){
     <div class="stat-card"><span class="sc-icon">⏳</span><div class="sc-val" style="color:var(--orange)">${tareasPend}</div><div class="sc-lbl">Tareas pendientes</div></div>
     <div class="stat-card"><span class="sc-icon">🌱</span><div class="sc-val" style="color:var(--green)">${habHoy}/${habitos.length}</div><div class="sc-lbl">Hábitos hoy</div></div>
     <div class="stat-card"><span class="sc-icon">🔥</span><div class="sc-val" style="color:var(--orange)">${mejorRacha}</div><div class="sc-lbl">Mejor racha</div></div>
-    <div class="stat-card"><span class="sc-icon">🔋</span><div class="sc-val" style="color:${restantesIA === 0 ? 'var(--red)' : restantesIA < 100 ? 'var(--orange)' : 'var(--green)'}">${restantesIA}</div><div class="sc-lbl">IA restantes</div></div>
+    <div class="stat-card"><span class="sc-icon">🔋</span><div class="sc-val" style="color:${restantesIA === 0 ? 'var(--red)' : restantesIA < LIMITE_DIARIO_IA * 0.2 ? 'var(--orange)' : 'var(--green)'}">${restantesIA}</div><div class="sc-lbl">IA restantes</div></div>
     <div class="stat-card"><span class="sc-icon">🤖</span><div class="sc-val" style="color:var(--green)">${notas.filter(n=>n.tipo==='ia').length}</div><div class="sc-lbl">Resúmenes IA</div></div>
   `;
   $('#statsSub').textContent = notas.length || habitos.length || tareas.length
